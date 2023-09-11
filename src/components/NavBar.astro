@@ -1,0 +1,39 @@
+---
+
+---
+<div class="navbar bg-base-100 h-[4.75rem] px-5 lg:h-[5.25rem] lg:px-7.5 xl:px-10 border-b border-n-6 border-neutral">
+  <div class="navbar-start">
+    <a href="/">
+      <img src="/logo/logo-dark.svg" alt="Babidi" width="190" height="40" decoding="async" />
+    </a>
+  </div>
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1">
+      <li><a class="font-sora text-bold hover:text-white">Caracteristicas</a></li>
+      <li><a class="font-sora hover:text-white">Precios</a></li>
+      <li><a class="font-sora hover:text-white">Sobre Nosotros</a></li>
+    </ul>
+  </div>
+  <div class="navbar-end">
+    <div class="flex flex-row space-x-5">
+      <a href="/login" class="hidden lg:flex items-center hover:text-white transition-colors duration-200 font-sora">Entrar</a>
+      <a href="/register" class="hidden lg:flex font-sora border-gray-600 border-2 rounded-full p-3 hover:border-primary hover:text-white transition-colors duration-200">Registrarse</a>
+    </div>
+    <div class="dropdown">
+      <label tabindex="0" class="btn btn-ghost lg:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+      </label>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li><a>Item 1</a></li>
+        <li>
+          <a>Parent</a>
+          <ul class="p-2">
+            <li><a>Submenu 1</a></li>
+            <li><a>Submenu 2</a></li>
+          </ul>
+        </li>
+        <li><a>Item 3</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

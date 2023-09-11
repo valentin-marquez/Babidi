@@ -1,0 +1,44 @@
+---
+import 'src/global.css'
+import NavBar from '@components/NavBar.astro';
+
+interface Props {
+    navBar?: boolean;
+}
+
+const { navBar = true } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="mask-icon" href="/favicon.svg" color="#8D46E7">
+    <title>Babidi</title>
+</head>
+<body>
+    <div class="flex min-h-screen flex-col overflow-x-hidden">
+        {
+            navBar && <NavBar/>
+        }
+
+        <main id="main" class="relative z-10 flex flex-1 flex-col">
+            <slot/>
+        </main>
+    </div>
+
+    <script>
+        const favicon = document.getElementById("favicon"); 
+
+        window.onfocus=function(){
+            favicon.setAttribute("href", "favicon.svg");
+        }
+
+        window.onblur=function(){
+            favicon.setAttribute("href", "favicon-off.svg");
+        }
+    </script>
+</body>
+</html>

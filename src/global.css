@@ -1,0 +1,18 @@
+@import '@fontsource/syne';
+@import '@fontsource/sora';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.animation-gravity{
+    animation: gravity 4s ease-in-out infinite alternate;
+}
+
+@keyframes gravity {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(10px);
+    }
+}
