@@ -1,16 +1,17 @@
 ---
 import 'src/global.css'
 import NavBar from '@components/NavBar.astro';
-
+import Footer from '@components/Footer.astro';
 interface Props {
     navBar?: boolean;
+    footer?: boolean;
 }
 
-const { navBar = true } = Astro.props;
+const { navBar = true, footer = true } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="es-ES">
+<html lang="es-ES" data-theme="darken">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,9 +25,13 @@ const { navBar = true } = Astro.props;
             navBar && <NavBar/>
         }
 
-        <main id="main" class="relative z-10 flex flex-1 flex-col">
+        <main id="main" class="relative flex flex-col w-full">
             <slot/>
         </main>
+
+        {
+            footer && <Footer/>
+        }
     </div>
 
     <script>

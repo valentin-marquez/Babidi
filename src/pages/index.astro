@@ -1,50 +1,76 @@
 ---
 import MainLayout from "@layouts/MainLayout.astro";
+import Hero from "@components/Hero.astro";
+import Card from "@components/Card.astro";
+import { PackagePlus, SearchCheck, HeartHandshake } from "lucide-astro";
 ---
 
 <MainLayout>
-<div class="flex flex-col">
-  <section  class="header-gradient hero min-h-screen section-bg overflow-x-hidden">
-      <div class="flex flex-col items-center text-center z-10">
-          <h1 class="text-white text-4xl  lg:text-6xl font-bold font-syne lg:leading-[3.7rem] mb-5 lg:max-w-4xl drop-shadow-lg" style="text-wrap: balance;">Tu Asistente Multifunción de Lenguaje Generativo</h1>
-          <p class="lg:max-w-2xl mx-auto mb-6 lg:mb-8 font-sora text-white opacity-75 drop-shadow-xl text-2xl">
-              Potencia tu productividad con Babidi, el Mago del texto Generativo.
-          </p>
-          <a href="login" class="btn md:btn-md lg:btn-lg btn-black shadow-primary shadow-sm hero-btn rounded-xl animation-gravity hover:text-white hover:border-primary hover:border-2 transition duration-300 ease-in-out">Chatear</a>
-      </div>
-  </section>
-</div>
+<Hero/>
+<section class="min-h-screen bg-base-100 mt-50 bg-section2">
+    <div class="h-[70vh] min-h-screen">
+        <div class="flex flex-col items-center" id="whatis-section">
+            <h1 class="text-white text-6xl font-bold font-syne lg:leading-[3.7rem] mb-5 lg:max-w-2xl drop-shadow-lg p-10" style="text-wrap: balance;">¿Qué es Babidi?</h1>
+        </div>
+        <div class="flex flex-row w-full justify-evenly items-center">
+            <figure class="w-auto h-full lg:card-side bg-gradient-to-br from-neutral to-base-100 shadow-xl border-2 border-neutral backdrop-blur-lg brightness-95 rounded-full overflow-hidden overflow-y-visible">
+                <img src="/images/home/undraw_people_re_8spw.svg" alt="whatis" class="max-w-md " decoding="async" loading="lazy"/>
+            </figure>
+            <p class="font-sora max-w-sm text-lg" style="text-wrap:balance">
+                Babidi es tu portal de intercambio de artículos personales, donde la magia de compartir cobra vida. Nuestra plataforma brinda la oportunidad de conectarte con otros usuarios y cambiar esos artículos que ya no necesitas por algo que realmente desees. Es más que un sitio web; es una comunidad de personas que valoran la sostenibilidad y la economía colaborativa.
+            </p>
+        </div>
+    </div>
+    <div class="divider"/>
+    <div class="flex flex-col min-h-screen items-center">
+        <div class="flex flex-col items-center" id="howworks-section">
+            <h1 class="text-white text-5xl font-bold font-syne lg:leading-[3.7rem] mb-5 lg:max-w-2xl drop-shadow-lg p-10" style="text-wrap: balance;">¿Cómo Funciona?</h1>
+        </div>
+        <div class="flex flex-col w-full mx-auto lg:flex-row">
+            <Card title="Listar tus Artículos" description="Comienza enumerando los artículos que deseas intercambiar en tu perfil. Agrega fotos, descripciones y detalles para atraer a otros usuarios interesados.">
+                <PackagePlus size="64px" stroke-width="1.5px" stroke="currentColor" class="mx-auto text-white" slot="icon"/>
+            </Card>
+            <Card title="Buscar lo que Necesitas" description="Explora la amplia variedad de artículos en Babidi. Utiliza nuestra función de búsqueda avanzada para encontrar exactamente lo que estás buscando.">
+                <SearchCheck size="64px" stroke-width="1.5px" stroke="currentColor" class="mx-auto text-white" slot="icon" />
+            </Card>
+            <Card title="Comunicación y Acuerdo" description="Cuando encuentres un artículo, inicia una conversación con el propietario a través del chat, discute detalles y acuerda un intercambio beneficioso.">
+                <HeartHandshake size="64px" stroke-width="1.5px" stroke="currentColor" class="mx-auto text-white" slot="icon" />
+            </Card>
+        </div>
+    </div>
+    <div class="h-[30vh] mb-40">
+        <div class="flex flex-col items-center" id="join-section">
+            <h1 class="text-white text-6xl font-bold font-syne lg:leading-[3.7rem] mb-5 max-w-lg drop-shadow-lg p-10 text-center" style="text-wrap: balance;">¡Únete a Ahora!</h1>
+        </div>
+        <div class="flex flex-row w-full justify-center space-y-10 mb-40">
+            <a href="login" class="btn md:btn-md lg:btn-lg btn-primary shadow-primary shadow-sm hero-btn rounded-xl hover:text-white transition duration-300 ease-in-out">Registrate</a>
+        </div>
+    </div>
+</section>
 </MainLayout>
 
 
-<style>
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-        filter: brightness(1); 
-    }
-    50% {
-        background-position: 100% 50%;
-        filter: brightness(1.5);
-    }
-    100% {
-        background-position: 0% 50%;
-        filter: brightness(1); 
-    }
-}
+<script>
+    const whatis = document.getElementById('whatis');
+    const howworks = document.getElementById('howworks');
+    const join = document.getElementById('join');
 
+    // click on whatis navbar link go to whatis section 
+    whatis.addEventListener('click', () => {
+        const whatisSection = document.getElementById('whatis-section');
+        whatisSection.scrollIntoView({behavior: "smooth"});
+    });
 
-.header-gradient:before {
-    position: absolute;
-    z-index: 10;
-    content: "";
-    top: 0%;
-    bottom: 10%;
-    width: 150%;
-    left: -25%;
-    background: linear-gradient(180deg, theme("colors.secondary") 0%, theme("colors.primary") 100%);
-    -webkit-mask-image: radial-gradient(rgba(0,0,0,.85), transparent 70%);
-    mask-image: radial-gradient(rgba(0,0,0,.54), transparent 70%);
-    animation: gradient 4s ease infinite;
-}
-</style>
+    // click on howworks navbar link go to howworks section
+    howworks.addEventListener('click', () => {
+        const howworksSection = document.getElementById('howworks-section');
+        howworksSection.scrollIntoView({behavior: "smooth"});
+    });
+
+    // click on join navbar link go to join section
+    join.addEventListener('click', () => {
+        const joinSection = document.getElementById('join-section');
+        joinSection.scrollIntoView({behavior: "smooth"});
+    });
+
+</script>

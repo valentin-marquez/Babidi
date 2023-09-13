@@ -1,0 +1,45 @@
+<section class="hero min-h-screen overflow-hidden">
+    <div class="flex flex-col items-center text-center z-10">
+        <h1 class="text-white text-5xl lg:text-7xl font-bold font-syne lg:leading-[3.7rem] mb-5 lg:max-w-4xl drop-shadow-lg" style="text-wrap: balance;">Intercambia con Babidi, vive la magia.</h1>
+        <p class="max-w-md lg:max-w-2xl mx-auto mb-6 lg:mb-8 font-sora text-white opacity-75 drop-shadow-xl text-2xl">
+            Únete a Babidi y comienza a intercambiar hoy mismo.
+        </p>
+        <a href="login" class="btn md:btn-md lg:btn-lg btn-black shadow-primary shadow-sm hero-btn rounded-xl animation-gravity hover:text-white hover:border-primary hover:border-2 transition duration-300 ease-in-out">Intercambiar</a>
+    </div>
+</section>
+
+<style>
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+        filter: brightness(1); 
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: brightness(1.5);
+    }
+    100% {
+        background-position: 0% 50%;
+        filter: brightness(1); 
+    }
+}
+
+section {
+    position: relative;
+    overflow: hidden;
+}
+
+section:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, theme("colors.secondary") 0%, theme("colors.primary") 100%);
+    -webkit-mask-image: radial-gradient(rgba(0,0,0,.85), transparent 70%);
+    mask-image: radial-gradient(rgba(0,0,0,.54), transparent 70%);
+    animation: gradient 4s ease infinite;
+}
+</style>

@@ -1,7 +1,8 @@
 ---
 
 ---
-<div class="navbar bg-base-100 h-[4.75rem] px-5 lg:h-[5.25rem] lg:px-7.5 xl:px-10 border-b border-n-6 border-neutral">
+<div class="sticky top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur transition-all duration-100 bg-base-100 text-base-content shadow-sm">
+  <div class="navbar bg-base-100 h-[4.75rem] px-5 lg:h-[5.25rem] lg:px-7.5 xl:px-10 border-b border-n-6 border-neutral">
   <div class="navbar-start">
     <a href="/">
       <img src="/logo/logo-dark.svg" alt="Babidi" width="190" height="40" decoding="async" />
@@ -9,9 +10,9 @@
   </div>
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
-      <li><a class="font-sora text-bold hover:text-white">Caracteristicas</a></li>
-      <li><a class="font-sora hover:text-white">Precios</a></li>
-      <li><a class="font-sora hover:text-white">Sobre Nosotros</a></li>
+      <li><a id="whatis" class="font-sora text-bold hover:text-white">¿Qué es Babidi?</a></li>
+      <li><a id="howworks" class="font-sora hover:text-white">¿Cómo Funciona?</a></li>
+      <li><a id="join" class="font-sora hover:text-white">Ventajas de Babidi</a></li>
     </ul>
   </div>
   <div class="navbar-end">
@@ -36,4 +37,5 @@
       </ul>
     </div>
   </div>
+</div>
 </div>

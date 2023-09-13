@@ -3,9 +3,9 @@ import MainLayout from "@layouts/MainLayout.astro";
 ---
 
 
-<MainLayout navBar={false}>
-  <section class="flex flex-col items-center space-y-20">
-    <a href="/" class="p-4">
+<MainLayout navBar={false} footer={false}>
+  <section class="flex flex-col items-center space-y-20 min-h-screen">
+    <a href="/" class="btn btn-ghost mt-4">
       <img src="/logo/logo-dark.svg" alt="Babidi" width="190" height="40" decoding="async" />
     </a>
     <div class="flex flex-col space-y-2">
@@ -32,7 +32,7 @@ import MainLayout from "@layouts/MainLayout.astro";
 
 
 <style>
- section{
+section{
  position: absolute;
   inset: 0;
   height: 100%;
