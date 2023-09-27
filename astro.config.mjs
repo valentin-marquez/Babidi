@@ -9,6 +9,11 @@ export default defineConfig({
   integrations: [tailwind(), react()],
   output: "server",
   adapter: vercel({
-    functionPerRoute: false,
+    webAnalytics:{
+      enabled:true
+    },
+    speedInsights:{
+      enabled:true
+    }
   })
 });

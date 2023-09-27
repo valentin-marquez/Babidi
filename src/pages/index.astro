@@ -5,26 +5,13 @@ import Card from "@components/Card.astro";
 import { PackagePlus, SearchCheck, HeartHandshake } from "lucide-astro";
 ---
 
-<MainLayout>
+<MainLayout footer={false}>
 <Hero/>
-<section class="min-h-screen bg-base-100 mt-50 bg-section2">
-    <div class="h-[70vh] min-h-screen">
-        <div class="flex flex-col items-center" id="whatis-section">
-            <h1 class="text-white text-6xl font-bold font-syne lg:leading-[3.7rem] mb-5 lg:max-w-2xl drop-shadow-lg p-10" style="text-wrap: balance;">¿Qué es Babidi?</h1>
-        </div>
-        <div class="flex flex-row w-full justify-evenly items-center">
-            <figure class="w-auto h-full lg:card-side bg-gradient-to-br from-neutral to-base-100 shadow-xl border-2 border-neutral backdrop-blur-lg brightness-95 rounded-full overflow-hidden overflow-y-visible">
-                <img src="/images/home/undraw_people_re_8spw.svg" alt="whatis" class="max-w-md " decoding="async" loading="lazy"/>
-            </figure>
-            <p class="font-sora max-w-sm text-lg" style="text-wrap:balance">
-                Babidi es tu portal de intercambio de artículos personales, donde la magia de compartir cobra vida. Nuestra plataforma brinda la oportunidad de conectarte con otros usuarios y cambiar esos artículos que ya no necesitas por algo que realmente desees. Es más que un sitio web; es una comunidad de personas que valoran la sostenibilidad y la economía colaborativa.
-            </p>
-        </div>
-    </div>
-    <div class="divider"/>
-    <div class="flex flex-col min-h-screen items-center">
+<div class="divider"/>
+<section class=" min-h-8">
+    <div class="flex flex-col items-center">
         <div class="flex flex-col items-center" id="howworks-section">
-            <h1 class="text-white text-5xl font-bold font-syne lg:leading-[3.7rem] mb-5 lg:max-w-2xl drop-shadow-lg p-10" style="text-wrap: balance;">¿Cómo Funciona?</h1>
+            <h1 class="text-white text-5xl font-bold text-center font-syne lg:leading-[3.7rem] mb-5 lg:max-w-2xl drop-shadow-lg p-10" style="text-wrap: balance;">¿Cómo Funciona?</h1>
         </div>
         <div class="flex flex-col w-full mx-auto lg:flex-row">
             <Card title="Listar tus Artículos" description="Comienza enumerando los artículos que deseas intercambiar en tu perfil. Agrega fotos, descripciones y detalles para atraer a otros usuarios interesados.">
@@ -38,13 +25,13 @@ import { PackagePlus, SearchCheck, HeartHandshake } from "lucide-astro";
             </Card>
         </div>
     </div>
-    <div class="h-[30vh] mb-40">
-        <div class="flex flex-col items-center" id="join-section">
-            <h1 class="text-white text-6xl font-bold font-syne lg:leading-[3.7rem] mb-5 max-w-lg drop-shadow-lg p-10 text-center" style="text-wrap: balance;">¡Únete a Ahora!</h1>
-        </div>
-        <div class="flex flex-row w-full justify-center space-y-10 mb-40">
-            <a href="login" class="btn md:btn-md lg:btn-lg btn-primary shadow-primary shadow-sm hero-btn rounded-xl hover:text-white transition duration-300 ease-in-out">Registrate</a>
-        </div>
+</section>
+<section class="mb-40">
+    <div class="flex flex-col items-center" id="join-section">
+        <h1 class="text-white text-6xl font-bold font-syne lg:leading-[3.7rem] mb-5 max-w-lg drop-shadow-lg p-10 text-center" style="text-wrap: balance;">¡Únete a Ahora!</h1>
+    </div>
+    <div class="flex flex-row w-full justify-center">
+        <a href="login" class="btn md:btn-md lg:btn-lg btn-primary shadow-primary shadow-sm hero-btn rounded-xl hover:text-white transition duration-300 ease-in-out">Registrate</a>
     </div>
 </section>
 </MainLayout>
@@ -72,5 +59,4 @@ import { PackagePlus, SearchCheck, HeartHandshake } from "lucide-astro";
         const joinSection = document.getElementById('join-section');
         joinSection.scrollIntoView({behavior: "smooth"});
     });
-
 </script>
