@@ -1,10 +1,9 @@
 ---
 import MainLayout from "@layouts/MainLayout.astro";
-import LoginForm from "@components/LoginForm";
+import RegistrationForm from "@components/RegistrationForm.jsx";
 ---
 
 
 <MainLayout navBar={false} footer={false}>
-  
-  <LoginForm  client:load />
+    <RegistrationForm client:load />
 </MainLayout>

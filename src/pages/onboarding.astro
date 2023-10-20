@@ -1,0 +1,17 @@
+---
+import MainLayout from "@layouts/MainLayout.astro";
+import { Logo } from "@components/Utils";
+---
+
+
+<MainLayout navBar={false} footer={false}>
+    <section class="flex flex-col items-center lg:space-y-10 min-h-screen inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
+        <Logo client:load/>
+        <ul class="steps">
+            <li class="step step-primary">Register</li>
+            <li class="step">Choose plan</li>
+            <li class="step">Purchase</li>
+            <li class="step">Receive Product</li>
+        </ul>
+    </section>
+</MainLayout>
