@@ -1,12 +1,19 @@
 ---
+import MainLayout from "@layouts/MainLayout.astro";
 const req = Astro.request;
 ---
 <script is:inline>
+async function getCookieExpiration(expiresInSeconds) {
+    const expirationDate = new Date();
+    expirationDate.setTime(expirationDate.getTime() + (expiresInSeconds * 1000)); // Multiplica por 1000 para convertir segundos a milisegundos
+    return expirationDate.toUTCString();
+}
+
 async function parseMagicLink(req) {
     const vals = window.location.hash.substring(1).split("&").map(kv => kv.split("="))
     const hashParameters = new Map(vals)
 
-    const data = await fetch("/api/login", {
+    const data = await fetch("/api/verifyToken", {
         method: "POST",
         headers: new Headers({ "Content-Type": "application/json" }),
         credentials: "same-origin",
@@ -18,7 +25,11 @@ async function parseMagicLink(req) {
     })
 
     if (data.ok) {
+        console.log(await data.json())
+        document.cookie = `sbat=${hashParameters.get('access_token')}; Path=/; expires=${getCookieExpiration(data.expires_in)};`;
         window.location.replace('/onboarding');
+    } else {
+        window.location.replace('/login');
     }
 }
 parseMagicLink()

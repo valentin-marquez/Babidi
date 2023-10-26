@@ -32,7 +32,14 @@ export async function signUp(email: string, password: string) {
         options: {
             emailRedirectTo: "http://localhost:4321/verify",
             data: {
-                onboarding: true,
+                onboarding: false,
+                profile: {
+                    username: null,
+                    first_name: null,
+                    last_name: null,
+                    city: null,
+                    bio: null,
+                }
             }
         }
     })

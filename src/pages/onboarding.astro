@@ -1,6 +1,10 @@
 ---
 import MainLayout from "@layouts/MainLayout.astro";
 import { Logo } from "@components/Utils";
+
+if (!Astro.cookies.has('sbat')) {
+    return Astro.redirect('/login', 302)
+}
 ---
 
 
@@ -8,10 +12,36 @@ import { Logo } from "@components/Utils";
     <section class="flex flex-col items-center lg:space-y-10 min-h-screen inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
         <Logo client:load/>
         <ul class="steps">
-            <li class="step step-primary">Register</li>
+            <li class="step step-primary">Informacion</li>
             <li class="step">Choose plan</li>
             <li class="step">Purchase</li>
             <li class="step">Receive Product</li>
         </ul>
+        <div class="form-control max-w-full w-1/4 space-y-2">
+            
+            <div class="container">
+                <label class="label">
+                    <span class="label-text">Nombre de usuario</span>
+                </label>
+                <input type="text" class="input input-bordered w-full hover:input-primary focus:input-primary transition-colors">
+            </div>
+            <div class="container">
+                <label class="label">
+                    <span class="label-text">Apellido Paterno</span>
+                </label>
+                <input type="text" class="input input-bordered w-full hover:input-primary focus:input-primary transition-colors">
+            </div>
+            <div class="container">
+                <label class="label">
+                    <span class="label-text">Apellido Materno</span>
+                </label>
+                <input type="text" class="input input-bordered w-full hover:input-primary focus:input-primary transition-colors">
+            </div>
+            <div class="container mt-5">
+                <a class="btn btn-primary w-full">
+                    Continuar
+                </a>
+            </div>
+        </div>
     </section>
 </MainLayout>
