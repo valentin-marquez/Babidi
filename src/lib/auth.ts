@@ -3,21 +3,11 @@ import { supabase } from "@lib/supabase-client";
 import type { VerifyEmailOtpParams } from "@supabase/supabase-js";
 
 
-export async function getUser(req: Request) {
-    const cookies = cookie.parse(req.headers.get("Cookie") ?? "");
-    if (!cookies.sb_session) return null;
-
-    const { data: { user } } = await supabase.auth.getUser(cookies.sb_session);
-    if (!user || user.role !== "authenticated") return null;
-    return user;
+export async function getUser(token: string) {
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error) throw error;
+    return data;
 }
-
-
-export async function isLoggedIn(req: Request) {
-    const user = await getUser(req);
-    return !!user;
-}
-
 
 export async function UserExists(email: string) {
     const { data, error } = await supabase.from('users').select('id').eq('email', email);
@@ -59,16 +49,17 @@ export async function signUp(email: string, password: string) {
     return { auth: data, error: authError };
 }
 
-export async function signInWithEmail(email: string) {
-    const { data, error } = await supabase.auth.signInWithOtp({ email: email })
-    console.log(data)
-    return data;
+export async function signInWithEmail(email: string, password: string) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password
+    })
+    return { auth: data, error: error };
 }
 
 export async function signInWithGoogle() {
     return await supabase.auth.signInWithOAuth({ provider: 'google' })
 }
-
 
 export async function verifyCode(email: string, code: string) {
     const credentials: VerifyEmailOtpParams = {
@@ -88,10 +79,13 @@ export async function setSessionData(refreshToken: string, accessToken: string) 
     return data;
 }
 
-export async function checkToken(token: string): Promise<boolean> {
+export async function checkToken(token: string) {
     const { data, error } = await supabase.auth.getUser(token);
-    if (error) {
-        return false;
-    }
-    return true;
+    if (error) throw error;
+    return data;
+}
+
+export async function signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
 }

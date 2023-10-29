@@ -3,8 +3,20 @@ import MainLayout from "@layouts/MainLayout.astro";
 import Hero from "@components/Hero.astro";
 import Card from "@components/Card.astro";
 import { PackagePlus, SearchCheck, HeartHandshake } from "lucide-astro";
-import { supabase } from "@lib/supabase-client";
+import { getUser } from '@lib/auth';
 
+
+// check the cookie to see if the user is logged in
+if (Astro.cookies.has('sbat')) {
+    const user = await getUser(Astro.cookies.get('sbat').value);
+    if (user){
+        if (user.user.user_metadata.onboarding){
+            return Astro.redirect('/home');
+        } else{
+            return Astro.redirect('/onboarding');
+        }
+    }
+}
 ---
 
 <MainLayout footer={false}>

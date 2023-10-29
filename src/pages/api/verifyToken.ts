@@ -4,7 +4,6 @@ import { checkToken } from '@lib/auth';
 export const POST: APIRoute = async ({ request }: APIContext) => {
     try {
         const { access_token } = await request.json();
-
         const result = await checkToken(access_token);
         return new Response(
             JSON.stringify({ result }),

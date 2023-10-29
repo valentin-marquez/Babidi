@@ -1,11 +1,10 @@
 ---
-import MainLayout from "@layouts/MainLayout.astro";
 const req = Astro.request;
 ---
 <script is:inline>
 async function getCookieExpiration(expiresInSeconds) {
     const expirationDate = new Date();
-    expirationDate.setTime(expirationDate.getTime() + (expiresInSeconds * 1000)); // Multiplica por 1000 para convertir segundos a milisegundos
+    expirationDate.setTime(expirationDate.getTime() + (expiresInSeconds * 1000));
     return expirationDate.toUTCString();
 }
 
@@ -25,9 +24,13 @@ async function parseMagicLink(req) {
     })
 
     if (data.ok) {
-        console.log(await data.json())
         document.cookie = `sbat=${hashParameters.get('access_token')}; Path=/; expires=${getCookieExpiration(data.expires_in)};`;
-        window.location.replace('/onboarding');
+        let result = await data.json();
+        if (result.result.user.user_metadata.onboarding) {
+            window.location.replace('/home');
+        } else {
+            window.location.replace('/onboarding');
+        }
     } else {
         window.location.replace('/login');
     }
