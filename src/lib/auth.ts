@@ -72,7 +72,7 @@ export async function setSessionData(refreshToken: string, accessToken: string) 
     return data;
 }
 
-export async function checkToken(token: string)  {
+export async function checkToken(token: string) {
     const { data, error } = await supabase.auth.getUser(token);
     if (error) throw error;
     return data;

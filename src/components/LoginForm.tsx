@@ -3,6 +3,7 @@ import { Mail } from 'lucide-react';
 import { signInWithEmail } from "@lib/auth";
 import { SpinnerAnimation, GoogleIcon } from '@components/Utils';
 import PasswordInput from '@components/PasswordInput';
+import Cookies from 'js-cookie';
 
 function LoginForm() {
     const [email, setEmail] = useState('');
@@ -44,18 +45,22 @@ function LoginForm() {
         try {
             setLoading(true);
             setErrors({ email: '', password: '' });
-            const result = await signInWithEmail(email, password);
-            if (result.auth) {
+            const { auth, error } = await signInWithEmail(email, password);
+            if (auth) {
                 setLoading(false);
                 setShowEmailSentText(true);
-                const accessToken = result.auth.session.access_token;
-                const expiresInSeconds = result.auth.session.expires_in;
-                const refreshToken = result.auth.session.refresh_token;
-                window.location.href = `/verify#access_token=${accessToken}&expires_in=${expiresInSeconds}&refresh_token=${refreshToken}`;
-            } else if (result.error) {
+                const accessToken = auth.session.access_token;
+                const expiresInSeconds = auth.session.expires_in;
+                Cookies.set('sbat', accessToken, { expires: expiresInSeconds / 86400 });
+                if (auth.user.user_metadata.onboarding) {
+                    window.location.href = '/home';
+                } else {
+                    window.location.href = '/onboarding';
+                }
+            } else if (error) {
                 setLoading(false);
 
-                console.error("Error al iniciar sesión:", result.error);
+                console.error("Error al iniciar sesión:", error);
             }
         } catch (error) {
             setLoading(false);

@@ -13,8 +13,6 @@ if (!Astro.cookies.has('sbat')) {
         if (user) {
             if (user.user_metadata.onboarding){
                 return Astro.redirect('/home', 302)
-            } else {
-                return Astro.redirect('/onboarding', 302)
             }
         }
     } catch (e) {
