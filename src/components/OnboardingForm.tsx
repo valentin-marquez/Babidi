@@ -9,6 +9,8 @@ function OnboardingForm() {
     const [email, setEmail] = useState('');
     const [isOver18, setIsOver18] = useState(true);
     const [acceptTerms, setAcceptTerms] = useState(true);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
     const [errors, setErrors] = useState({
         fullName: '',
         nickname: '',
@@ -19,11 +21,18 @@ function OnboardingForm() {
         async function fetchUser() {
             try {
                 const result = await getUser(Cookies.get('sbat'));
-                // Obtén el correo electrónico del resultado
                 const userEmail = result?.user?.email;
                 setEmail(userEmail || '');
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        setLatitude(position.coords.latitude);
+                        setLongitude(position.coords.longitude);
+                    });
+                }
             } catch (error) {
                 console.error("Ocurrió un error:", error);
+                await signOut();
+                window.location.href = '/login';
             }
         }
 
@@ -78,8 +87,6 @@ function OnboardingForm() {
             });
             return;
         }
-
-        // Handle form submission logic here
     };
 
     return (
@@ -88,8 +95,9 @@ function OnboardingForm() {
             <h2 className="text-white text-3xl lg:text-3xl font-bold font-syne lg:max-w-4xl drop-shadow-lg">
                 Bienvenido a tu cuenta
             </h2>
-            <p className="font-sora text-center">
-                Antes que nada, Cuéntanos un poco sobre ti
+            {/* @ts-ignore */}
+            <p className="font-sora text-center" style={{ textWrap: 'balance' }}>
+                Antes que nada, <br />Cuéntanos un poco sobre ti
             </p>
             <div className="form-control max-w-full md:w-1/4 space-y-2 w-3/5">
                 <div className="container">
@@ -161,7 +169,7 @@ function OnboardingForm() {
                     </p>
                 </div>
             </div>
-        </section>
+        </section >
     );
 }
 

@@ -1,8 +1,27 @@
 ---
 import MainLayout from "@layouts/MainLayout.astro";
 import OnboardingForm from "@components/OnboardingForm";
+import { checkToken, signOut } from "@lib/auth";
+
+
 if (!Astro.cookies.has('sbat')) {
     return Astro.redirect('/login', 302)
+} else{
+    const token = Astro.cookies.get('sbat')
+    try{
+        const { user } = await checkToken(token.value)
+        if (user) {
+            if (user.user_metadata.onboarding){
+                return Astro.redirect('/home', 302)
+            } else {
+                return Astro.redirect('/onboarding', 302)
+            }
+        }
+    } catch (e) {
+        Astro.cookies.delete('sbat')
+        await signOut()
+        return Astro.redirect('/login', 302)
+    }
 }
 ---
 

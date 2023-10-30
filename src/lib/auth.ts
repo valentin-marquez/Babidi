@@ -23,13 +23,6 @@ export async function signUp(email: string, password: string) {
             emailRedirectTo: "http://localhost:4321/verify",
             data: {
                 onboarding: false,
-                profile: {
-                    username: null,
-                    first_name: null,
-                    last_name: null,
-                    city: null,
-                    bio: null,
-                }
             }
         }
     })
@@ -79,7 +72,7 @@ export async function setSessionData(refreshToken: string, accessToken: string) 
     return data;
 }
 
-export async function checkToken(token: string) {
+export async function checkToken(token: string)  {
     const { data, error } = await supabase.auth.getUser(token);
     if (error) throw error;
     return data;
