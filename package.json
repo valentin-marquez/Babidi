@@ -1,11 +1,11 @@
 {
-  "name": "",
+  "name": "babidi",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "npx prisma generate && npx astro build",
     "preview": "astro preview",
     "astro": "astro"
   },

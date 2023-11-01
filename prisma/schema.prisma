@@ -337,9 +337,17 @@ model posts {
 
 model profiles {
   user_id                                                 String            @id @db.Uuid
-  first_name                                              String?           @db.VarChar(50)
-  last_name                                               String?           @db.VarChar(50)
   profile_picture                                         String?           @db.VarChar(255)
+  full_name                                               String?           @db.VarChar(100)
+  username                                                String?           @db.VarChar(50)
+  accepted_terms                                          Boolean?
+  is_adult                                                Boolean?
+  createdat                                               DateTime?         @default(now()) @db.Timestamp(6)
+  updatedat                                               DateTime?         @default(now()) @db.Timestamp(6)
+  deletedat                                               DateTime?         @db.Timestamp(6)
+  avatar                                                  String?           @db.VarChar(255)
+  bio                                                     String?
+  status                                                  String?           @db.VarChar(255)
   messages_messages_receiver_idToprofiles                 messages[]        @relation("messages_receiver_idToprofiles")
   messages_messages_sender_idToprofiles                   messages[]        @relation("messages_sender_idToprofiles")
   posts                                                   posts[]
