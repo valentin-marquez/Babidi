@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Mail } from 'lucide-react';
 import { signInWithEmail } from "@lib/auth";
 import { SpinnerAnimation, GoogleIcon } from '@components/Utils';
 import PasswordInput from '@components/PasswordInput';
 import Cookies from 'js-cookie';
+
+
 
 function LoginForm() {
     const [email, setEmail] = useState('');
@@ -13,11 +15,24 @@ function LoginForm() {
     const [loading, setLoading] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
     const [showEmailSentText, setShowEmailSentText] = useState(false);
+    const emailInputRef = useRef(null);
+    const passwordInputRef = useRef(null);
+
 
     const [errors, setErrors] = useState({
         email: '',
         password: '',
     });
+
+    const handleEnterPress = async (e) => {
+        if (e.key === 'Enter') {
+            if (emailInputRef.current === document.activeElement) {
+                passwordInputRef.current.focus();
+            } else if (passwordInputRef.current) {
+                handleEmailSubmit();
+            }
+        }
+    }
 
     const validateEmail = (email) => {
         if (!email || email.trim() === '') return false;
@@ -135,11 +150,8 @@ function LoginForm() {
                                 placeholder="Dirección de correo"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                onKeyUp={(e) => {
-                                    if (e.key === 'Enter') {
-                                        handleEmailSubmit();
-                                    }
-                                }}
+                                onKeyUp={handleEnterPress}
+                                ref={emailInputRef}
                                 className={`input input-bordered w-full hover:input-primary focus:input-primary transition-colors ${errors.email ? 'input-error focus:input-error' : ''}`}
                             />
                         </div>
@@ -147,6 +159,9 @@ function LoginForm() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             error={errors.password}
+                            onKeyUp={handleEnterPress}
+                            ref={passwordInputRef}
+
                         />
 
                         <button className="btn btn-full bg-white text-black hover:bg-gray-200 transition-all" onClick={handleEmailSubmit}>

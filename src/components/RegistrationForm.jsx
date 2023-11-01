@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Mail, Eye, EyeOff } from 'lucide-react';
 import { signUp } from "@lib/auth"
 
@@ -12,13 +12,25 @@ function RegistrationForm() {
   const [loading, setLoading] = useState(false);
   const [emailConfirmationSent, setEmailConfirmationSent] = useState(false);
   const [showGoogleRegistration, setShowGoogleRegistration] = useState(true);
-
+  const emailInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
   // Estado para almacenar mensajes de error
   const [errors, setErrors] = useState({
     email: '',
     password: '',
     general: ''
   });
+
+  const handleEnterPress = async (e) => {
+    if (e.key === 'Enter') {
+      if (emailInputRef.current === document.activeElement) {
+        passwordInputRef.current.focus()
+      } else if (passwordInputRef.current) {
+        console.log('handleEmailSubmit')
+        await handleEmailSubmit();
+      }
+    }
+  }
 
   const validateEmail = (email) => {
     if (!email || email.trim() === "") return false;
@@ -108,11 +120,8 @@ function RegistrationForm() {
                 placeholder="Dirección de correo"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onKeyUp={(e) => {
-                  if (e.key === 'Enter') {
-                    handleEmailSubmit();
-                  }
-                }}
+                onKeyUp={handleEnterPress}
+                ref={emailInputRef}
                 className={`input input-bordered w-full hover:input-primary focus:input-primary transition-colors ${errors.email ? 'input-error focus:input-error' : ''}`}
               />
             </div>
@@ -120,8 +129,9 @@ function RegistrationForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={errors.password}
+              onKeyUp={handleEnterPress}
+              ref={passwordInputRef}
             />
-
             <button className="btn btn-full bg-white text-black hover:bg-gray-200 transition-all" onClick={handleEmailSubmit}>
               {loading ? <div>
                 <SpinnerAnimation />

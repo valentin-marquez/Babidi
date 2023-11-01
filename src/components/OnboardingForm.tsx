@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Logo, getCookie } from "@components/Utils";
-import { getUser, signOut } from '@lib/auth';
+import { getUser, signOut, CreateUserProfile } from '@lib/auth';
 import Cookies from 'js-cookie';
 
+import type { Profile } from '@lib/interfaces';
+
 function OnboardingForm() {
+    const [UserID, setUserID] = useState('');
     const [fullName, setFullName] = useState('');
     const [nickname, setNickname] = useState('');
     const [email, setEmail] = useState('');
@@ -22,11 +25,13 @@ function OnboardingForm() {
             try {
                 const result = await getUser(Cookies.get('sbat'));
                 const userEmail = result?.user?.email;
+                setUserID(result?.user?.id);
                 setEmail(userEmail || '');
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition((position) => {
                         setLatitude(position.coords.latitude);
                         setLongitude(position.coords.longitude);
+                        console.log(position);
                     });
                 }
             } catch (error) {
@@ -87,7 +92,33 @@ function OnboardingForm() {
             });
             return;
         }
-    };
+
+        const user: Profile = {
+            id: UserID,
+            fullName: fullName,
+            username: nickname,
+            email: email,
+            avatar: '',
+            bio: '',
+            accepted_terms: acceptTerms,
+            is_adult: isOver18,
+            geometry: {
+                latitude: latitude,
+                longitude: longitude
+            },
+            status: 'ONLINE'
+        };
+
+        if (await CreateUserProfile(user)) {
+            window.location.href = '/';
+        } else {
+            setErrors({
+                ...errors,
+                general: 'Ocurrió un error al crear su perfil. Inténtelo de nuevo más tarde.',
+            });
+        }
+
+    }
 
     return (
         <section className="flex flex-col items-center lg:space-y-5 min-h-screen inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">

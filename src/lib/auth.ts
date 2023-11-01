@@ -1,7 +1,9 @@
 import cookie from "cookie";
 import { supabase } from "@lib/supabase-client";
+import { updateUserLocation } from "@lib/db";
 import type { VerifyEmailOtpParams } from "@supabase/supabase-js";
 
+import type { Profile, UserLocation } from "@lib/interfaces";
 
 export async function getUser(token: string) {
     const { data, error } = await supabase.auth.getUser(token);
@@ -65,7 +67,6 @@ export async function verifyCode(email: string, code: string) {
     return data;
 }
 
-
 export async function setSessionData(refreshToken: string, accessToken: string) {
     const { data, error } = await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
     if (error) throw error;
@@ -81,4 +82,35 @@ export async function checkToken(token: string) {
 export async function signOut() {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
+}
+
+export async function CreateUserProfile(user: Profile): Promise<boolean> {
+    let profile_data = {
+        user_id: user.id,
+        full_name: user.fullName,
+        username: user.username,
+        accepted_terms: user.accepted_terms,
+        is_adult: user.is_adult,
+        avatar: user.avatar,
+        bio: user.bio,
+        status: user.status,
+    }
+    const { error } = await supabase
+        .from('profiles')
+        .insert([profile_data])
+
+    if (error) {
+        console.error(error);
+        return false;
+    }
+
+    if (user.geometry.latitude && user.geometry.longitude) {
+        let location: UserLocation = {
+            id: user.id,
+            latitude: user.geometry.latitude,
+            longitude: user.geometry.longitude,
+        }
+        await updateUserLocation(location)
+    }
+    return true;
 }
