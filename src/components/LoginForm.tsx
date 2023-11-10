@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Mail } from 'lucide-react';
-import { signInWithEmail } from "@lib/auth";
+import { signInWithEmail, signInWithGoogle } from "@lib/auth";
 import { SpinnerAnimation, GoogleIcon } from '@components/Utils';
 import PasswordInput from '@components/PasswordInput';
 import Cookies from 'js-cookie';
@@ -12,7 +12,8 @@ function LoginForm() {
     const [emailError, setEmailError] = useState(false);
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loadingLogin, setLoadingLogin] = useState(false);
+    const [loadingGoogle, setLoadingGoogle] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
     const [showEmailSentText, setShowEmailSentText] = useState(false);
     const emailInputRef = useRef(null);
@@ -45,6 +46,7 @@ function LoginForm() {
     };
 
     const handleEmailSubmit = async () => {
+        "use server";
         if (!validateEmail(email)) {
             setErrors({ ...errors, email: 'El formato de correo es inválido' });
             setEmailError(true);
@@ -58,11 +60,11 @@ function LoginForm() {
         }
 
         try {
-            setLoading(true);
+            setLoadingLogin(true);
             setErrors({ email: '', password: '' });
             const { auth, error } = await signInWithEmail(email, password);
             if (auth) {
-                setLoading(false);
+                setLoadingLogin(false);
                 setShowEmailSentText(true);
                 const accessToken = auth.session.access_token;
                 const expiresInSeconds = auth.session.expires_in;
@@ -73,15 +75,20 @@ function LoginForm() {
                     window.location.href = '/onboarding';
                 }
             } else if (error) {
-                setLoading(false);
+                setLoadingLogin(false);
 
                 console.error("Error al iniciar sesión:", error);
             }
         } catch (error) {
-            setLoading(false);
+            setLoadingLogin(false);
             setErrors({ ...errors, email: 'El correo o la contraseña son incorrectos', password: '' });
             console.error("Error al iniciar sesión:", error);
         }
+    };
+
+    const handleGoogleSubmit = async () => {
+        setLoadingGoogle(true);
+        await signInWithGoogle();
     };
 
     return (
@@ -165,20 +172,22 @@ function LoginForm() {
                         />
 
                         <button className="btn btn-full bg-white text-black hover:bg-gray-200 transition-all" onClick={handleEmailSubmit}>
-                            {loading ? <div>
+                            {loadingLogin ? <div>
                                 <SpinnerAnimation />
                             </div> : null}
-                            {loading ? 'Cargando...' : <><Mail size={24} className="mr-2" /> Entrar Con Correo</>}
+                            {loadingLogin ? 'Cargando...' : <><Mail size={24} className="mr-2" /> Entrar Con Correo</>}
                         </button>
                     </div>
                 )}
                 <div className="divider">O</div>
-                <a className="btn btn-full">
-                    <GoogleIcon />
-                    Continuar con Google
-                </a>
+                <button className="btn btn-full" onClick={handleGoogleSubmit}>
+                    {loadingGoogle ? <div>
+                        <SpinnerAnimation />
+                    </div> : null}
+                    {loadingGoogle ? 'Cargando...' : <><GoogleIcon /> Entrar con Google</>}
+                </button>
             </div>
-        </section>
+        </section >
     );
 }
 

@@ -54,14 +54,4 @@ function GoogleIcon() {
   )
 }
 
-function getCookie(name: string): string | null {
-  const cookies = document.cookie.split(';');
-  const cookie = cookies.find((cookie) => cookie.startsWith(`${name}=`));
-  if (cookie) {
-    const cookieValue = cookie.split('=')[1];
-    return cookieValue;
-  }
-  return null;
-}
-
-export { SpinnerAnimation, GoogleIcon, Logo, getCookie };
+export { SpinnerAnimation, GoogleIcon, Logo };

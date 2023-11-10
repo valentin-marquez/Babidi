@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Logo, getCookie } from "@components/Utils";
-import { getUser, signOut, CreateUserProfile } from '@lib/auth';
+import { Logo, } from "@components/Utils";
+import { signOut, CreateUserProfile } from '@lib/auth';
 import Cookies from 'js-cookie';
 
 import type { Profile } from '@lib/interfaces';
@@ -23,15 +23,29 @@ function OnboardingForm() {
     useEffect(() => {
         async function fetchUser() {
             try {
-                const result = await getUser(Cookies.get('sbat'));
-                const userEmail = result?.user?.email;
-                setUserID(result?.user?.id);
+                const sbat = Cookies.get('sbat');
+                const response = await fetch(`/api/user/getUser`, {
+                    method: 'POST',
+                    headers: new Headers({
+                        "Authorization": `${sbat}`,
+                        "Content-Type": "application/json"
+                    }),
+                    credentials: 'same-origin'
+                });
+
+                if (!response.ok) {
+                    console.log(response.statusText);
+                    throw new Error(response.statusText);
+                }
+
+                const { user } = await response.json();
+                const userEmail = user?.email;
+                setUserID(user?.id);
                 setEmail(userEmail || '');
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition((position) => {
                         setLatitude(position.coords.latitude);
                         setLongitude(position.coords.longitude);
-                        console.log(position);
                     });
                 }
             } catch (error) {
@@ -45,6 +59,7 @@ function OnboardingForm() {
     }, []);
 
     const handleLoginWithAnotherEmail = async () => {
+        "use server";
         // Clear any previous errors
         setErrors({
             fullName: '',
@@ -64,13 +79,14 @@ function OnboardingForm() {
 
     const handleFormSubmit = async () => {
         // Clear any previous errors
+        "use server";
         setErrors({
             fullName: '',
             nickname: '',
             general: '',
         });
 
-        if (!fullName.trim()) {
+        if (!fullName.trim() || fullName.split(' ').length < 2) {
             setErrors({ ...errors, fullName: 'Ingrese su nombre completo' });
             return;
         }
@@ -106,7 +122,8 @@ function OnboardingForm() {
                 latitude: latitude,
                 longitude: longitude
             },
-            status: 'ONLINE'
+            status: 'ONLINE',
+            token: Cookies.get('sbat')
         };
 
         if (await CreateUserProfile(user)) {

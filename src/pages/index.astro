@@ -3,31 +3,43 @@ import MainLayout from "@layouts/MainLayout.astro";
 import Hero from "@components/Hero.astro";
 import Card from "@components/Card.astro";
 import { PackagePlus, SearchCheck, HeartHandshake } from "lucide-astro";
-import { getUser, signOut } from '@lib/auth';
+import { getUser,signOut } from "@lib/auth";
+import { POST as isOnboarding} from "@api/user/isOnboarding";
 
-
-if (Astro.cookies.has('sbat')) {
-  try {
-    const { user } = await getUser(Astro.cookies.get('sbat').value);
-
-    if (user) {
-      if (user.user_metadata.onboarding) {
-        return Astro.redirect('/home');
-      } else {
-        return Astro.redirect('/onboarding');
-      }
-    }
-  } catch (error) {
-    await signOut();
-    Astro.cookies.delete('sbat');
+try{
+  const token = Astro.cookies.get("sbat").value || null
+  if (!token) {
+      return Astro.redirect("/login")
   }
+  const { id } = await getUser(Astro.cookies.get("sbat").value);
+  const req = new Request(`${Astro.url.host}/api/user/isOnboarding`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+      },
+      body: JSON.stringify({ id }),
+  })
+  //@ts-ignore
+  const response = await isOnboarding({ request: req })
+  // @ts-ignores
+  const {status} = await response.json()
+
+  if (!status) {
+      return Astro.redirect("/home")
+  } else {
+      return Astro.redirect("/onboarding")
+  }
+} catch (e) {
+    await signOut()
+    console.error(e)
 }
 ---
 
 <MainLayout footer={false}>
 <Hero/>
 <div class="divider"/>
-<section class=" min-h-8">
+<section class="h-screen">
     <div class="flex flex-col items-center">
         <div class="flex flex-col items-center" id="howworks-section">
             <h1 class="text-white text-5xl font-bold text-center font-syne lg:leading-[3.7rem] mb-5 lg:max-w-2xl drop-shadow-lg p-10" style="text-wrap: balance;">¿Cómo Funciona?</h1>
@@ -57,25 +69,11 @@ if (Astro.cookies.has('sbat')) {
 
 
 <script>
-    const whatis = document.getElementById('whatis');
     const howworks = document.getElementById('howworks');
-    const join = document.getElementById('join');
-
-    // click on whatis navbar link go to whatis section 
-    whatis.addEventListener('click', () => {
-        const whatisSection = document.getElementById('whatis-section');
-        whatisSection.scrollIntoView({behavior: "smooth"});
-    });
 
     // click on howworks navbar link go to howworks section
     howworks.addEventListener('click', () => {
         const howworksSection = document.getElementById('howworks-section');
         howworksSection.scrollIntoView({behavior: "smooth"});
-    });
-
-    // click on join navbar link go to join section
-    join.addEventListener('click', () => {
-        const joinSection = document.getElementById('join-section');
-        joinSection.scrollIntoView({behavior: "smooth"});
     });
 </script>

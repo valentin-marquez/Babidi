@@ -1,25 +1,37 @@
 ---
 import MainLayout from "@layouts/MainLayout.astro";
 import OnboardingForm from "@components/OnboardingForm";
-import { checkToken, signOut } from "@lib/auth";
+import { getUser, signOut } from "@lib/auth";
+import { POST as isOnboarding} from "@api/user/isOnboarding";
 
-
-if (!Astro.cookies.has('sbat')) {
-    return Astro.redirect('/login', 302)
-} else{
-    const token = Astro.cookies.get('sbat')
-    try{
-        const { user } = await checkToken(token.value)
-        if (user) {
-            if (user.user_metadata.onboarding){
-                return Astro.redirect('/home', 302)
-            }
-        }
-    } catch (e) {
-        Astro.cookies.delete('sbat')
-        await signOut()
-        return Astro.redirect('/login', 302)
+try{
+    const token = Astro.cookies.get("sbat").value || null
+    if (!token) {
+        return Astro.redirect("/login", {status: 302})
     }
+    const { id } = await getUser(Astro.cookies.get("sbat").value);
+    const req = new Request(`${Astro.url.host}/api/user/isOnboarding`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`,
+        },
+        body: JSON.stringify({ id }),
+    })
+    //@ts-ignore
+    const response = await isOnboarding({ request: req })
+    // @ts-ignores
+    const {status} = await response.json()
+
+    if (!status) {
+        return Astro.redirect("/home")
+    } else {
+        return Astro.redirect("/onboarding")
+    }
+} catch (e) {
+    console.error(e)
+    await signOut()
+    return Astro.redirect("/login")
 }
 ---
 

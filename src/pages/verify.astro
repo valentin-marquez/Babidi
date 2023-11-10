@@ -2,38 +2,46 @@
 const req = Astro.request;
 ---
 <script is:inline>
-async function getCookieExpiration(expiresInSeconds) {
+function getCookieExpiration(expiresInSeconds) {
     const expirationDate = new Date();
-    expirationDate.setTime(expirationDate.getTime() + (expiresInSeconds * 1000));
+    expirationDate.setTime(expirationDate.getTime() + expiresInSeconds * 1000);
     return expirationDate.toUTCString();
 }
 
 async function parseMagicLink(req) {
     const vals = window.location.hash.substring(1).split("&").map(kv => kv.split("="))
-    const hashParameters = new Map(vals)
+    const hashParams = new Map(vals);
 
-    const data = await fetch("/api/verifyToken", {
-        method: "POST",
-        headers: new Headers({ "Content-Type": "application/json" }),
-        credentials: "same-origin",
-        body: JSON.stringify({
-            access_token: hashParameters.get('access_token'),
-            expires_in: hashParameters.get('expires_in'),
-            refresh_token: hashParameters.get('refresh_token'),
-        }),
-    })
-
-    if (data.ok) {
-        document.cookie = `sbat=${hashParameters.get('access_token')}; Path=/; expires=${getCookieExpiration(data.expires_in)};`;
-        let result = await data.json();
-        if (result.result.user.user_metadata.onboarding) {
-            window.location.replace('/home');
-        } else {
-            window.location.replace('/onboarding');
+    const access_token = hashParams.get("access_token");
+    const expires_in = parseInt(hashParams.get("expires_in"), 10);
+    const token_type = hashParams.get("token_type");
+    if (access_token && !isNaN(expires_in)){
+        const bearerToken = `${access_token}`;
+        
+        try{
+            const response = await fetch("/api/token/validate", {
+                method: "POST",
+                headers: new Headers({
+                    "Authorization": bearerToken,
+                    "Content-Type": "application/json"
+                }),
+                credentials: "same-origin",
+            });
+            
+            if (response.ok){
+                const { valid } = await response.json();
+                if (valid){
+                    document.cookie = `sbtt=${token_type}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(expires_in)};`;
+                    document.cookie = `sbat=${access_token}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(expires_in)};`;
+                    document.cookie = `sbatt=${hashParams.get("refresh_token")}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(expires_in)};`; 
+                    window.location.href = "/";
+                }
+            }
+        } catch (e) {
+            console.error("Error:", e);
+            window.location.replace("/login");
         }
-    } else {
-        window.location.replace('/login');
     }
 }
-parseMagicLink()
+parseMagicLink();
 </script>

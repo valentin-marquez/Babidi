@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Mail, Eye, EyeOff } from 'lucide-react';
-import { signUp } from "@lib/auth"
+import { signUpEmail, signInWithGoogle } from "@lib/auth"
 
 import { GoogleIcon, SpinnerAnimation } from '@components/Utils';
 
@@ -9,7 +9,8 @@ import PasswordInput from '@components/PasswordInput';
 function RegistrationForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loadingLogin, setLoadingLogin] = useState(false);
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [emailConfirmationSent, setEmailConfirmationSent] = useState(false);
   const [showGoogleRegistration, setShowGoogleRegistration] = useState(true);
   const emailInputRef = useRef(null);
@@ -39,7 +40,8 @@ function RegistrationForm() {
   }
 
   const handleEmailSubmit = async () => {
-    setLoading(true);
+    'use server';
+    setLoadingLogin(true);
     // Limpiar los mensajes de error
     setErrors({
       email: '',
@@ -49,39 +51,44 @@ function RegistrationForm() {
 
     if (!email || email.trim() === "") {
       setErrors({ ...errors, email: 'Debe ingresar un correo válido' });
-      setLoading(false);
+      setLoadingLogin(false);
       return;
     }
 
     if (!validateEmail(email)) {
       setErrors({ ...errors, email: 'El formato de correo es inválido' });
-      setLoading(false);
+      setLoadingLogin(false);
       return;
     }
 
     if (!password || password.trim() === "") {
       setErrors({ ...errors, password: 'Debe ingresar una contraseña' });
-      setLoading(false);
+      setLoadingLogin(false);
       return;
     }
 
     try {
-      const response = await signUp(email, password);
+      const response = await signUpEmail(email, password);
       if (response.error && response.error.name === 'AuthError') {
         setErrors({ ...errors, email: 'El correo ingresado ya existe' });
-        setLoading(false);
+        setLoadingLogin(false);
         return;
       } else {
         setEmailConfirmationSent(true);
-        setLoading(false);
+        setLoadingLogin(false);
         setShowGoogleRegistration(false);
       }
     } catch (error) {
       console.error("Error al enviar el código de confirmación:", error);
       setErrors({ ...errors, general: 'Hubo un error al procesar su solicitud' });
-      setLoading(false);
+      setLoadingLogin(false);
     }
   };
+
+  const handleGoogleSubmit = async () => {
+    setLoadingGoogle(true);
+    await signInWithGoogle();
+  }
 
   return (
     <section className="flex flex-col items-center lg:space-y-10 min-h-screen inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
@@ -133,20 +140,22 @@ function RegistrationForm() {
               ref={passwordInputRef}
             />
             <button className="btn btn-full bg-white text-black hover:bg-gray-200 transition-all" onClick={handleEmailSubmit}>
-              {loading ? <div>
+              {loadingLogin ? <div>
                 <SpinnerAnimation />
               </div> : null}
-              {loading ? 'Cargando...' : <><Mail size={24} className="mr-2" /> Registrarse con correo</>}
+              {loadingLogin ? 'Cargando...' : <><Mail size={24} className="mr-2" /> Registrarse con correo</>}
             </button>
           </div>
         )}
         {showGoogleRegistration && (
           <>
             <div className="divider">O</div>
-            <a className="btn btn-full">
-              <GoogleIcon />
-              Registrarse con Google
-            </a>
+            <button className="btn btn-full" onClick={handleGoogleSubmit}>
+              {loadingGoogle ? <div>
+                <SpinnerAnimation />
+              </div> : null}
+              {loadingGoogle ? 'Cargando...' : <><GoogleIcon /> Registrarse con Google</>}
+            </button>
           </>
         )}
       </div>

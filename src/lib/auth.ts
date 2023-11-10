@@ -1,14 +1,12 @@
-import cookie from "cookie";
 import { supabase } from "@lib/supabase-client";
-import { updateUserLocation } from "@lib/db";
 import type { VerifyEmailOtpParams } from "@supabase/supabase-js";
 
 import type { Profile, UserLocation } from "@lib/interfaces";
-
-export async function getUser(token: string) {
+import type { User } from "@supabase/supabase-js";
+export async function getUser(token: string): Promise<User | null> {
     const { data, error } = await supabase.auth.getUser(token);
     if (error) throw error;
-    return data;
+    return data ? data.user : null;
 }
 
 export async function UserExists(email: string) {
@@ -17,15 +15,12 @@ export async function UserExists(email: string) {
     return data.length > 0;
 }
 
-export async function signUp(email: string, password: string) {
+export async function signUpEmail(email: string, password: string) {
     const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
         options: {
             emailRedirectTo: "http://localhost:4321/verify",
-            data: {
-                onboarding: false,
-            }
         }
     })
     let authError = null;
@@ -53,7 +48,12 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function signInWithGoogle() {
-    return await supabase.auth.signInWithOAuth({ provider: 'google' })
+    return await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: "http://localhost:4321/verify"
+        }
+    })
 }
 
 export async function verifyCode(email: string, code: string) {
@@ -73,10 +73,10 @@ export async function setSessionData(refreshToken: string, accessToken: string) 
     return data;
 }
 
-export async function checkToken(token: string) {
+export async function checkToken(token: string): Promise<boolean> {
     const { data, error } = await supabase.auth.getUser(token);
     if (error) throw error;
-    return data;
+    return !!data
 }
 
 export async function signOut() {
@@ -85,32 +85,60 @@ export async function signOut() {
 }
 
 export async function CreateUserProfile(user: Profile): Promise<boolean> {
-    let profile_data = {
-        user_id: user.id,
-        full_name: user.fullName,
-        username: user.username,
-        accepted_terms: user.accepted_terms,
-        is_adult: user.is_adult,
-        avatar: user.avatar,
-        bio: user.bio,
-        status: user.status,
-    }
-    const { error } = await supabase
-        .from('profiles')
-        .insert([profile_data])
+    try {
+        let profile_data = {
+            user_id: user.id,
+            full_name: user.fullName,
+            username: user.username,
+            accepted_terms: user.accepted_terms,
+            is_adult: user.is_adult,
+            avatar: user.avatar,
+            bio: user.bio,
+            status: user.status,
+        }
+        const { error } = await supabase
+            .from('profiles')
+            .insert([profile_data])
 
-    if (error) {
+        if (error) {
+            console.error(error);
+            return false;
+        }
+
+        if (user.geometry.latitude && user.geometry.longitude) {
+            let location: UserLocation = {
+                id: user.id,
+                latitude: user.geometry.latitude,
+                longitude: user.geometry.longitude,
+            }
+            const response = await fetch("/api/user/updateLocation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `${user.token}`,
+                },
+                credentials: "same-origin",
+                body: JSON.stringify(location),
+            });
+        }
+
+        const response = await fetch("/api/user/setOnboarding", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `${user.token}`,
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({ userId: user.id, isOnboarding: false }),
+        });
+
+        if (!response.ok) {
+            console.error(response.statusText);
+            return false;
+        }
+        return true;
+    } catch (error) {
         console.error(error);
         return false;
     }
-
-    if (user.geometry.latitude && user.geometry.longitude) {
-        let location: UserLocation = {
-            id: user.id,
-            latitude: user.geometry.latitude,
-            longitude: user.geometry.longitude,
-        }
-        await updateUserLocation(location)
-    }
-    return true;
 }

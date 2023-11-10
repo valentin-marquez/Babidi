@@ -12,6 +12,7 @@ export interface Profile {
         latitude: number;
         longitude: number;
     };
+    token: string;
 };
 
 export interface UserLocation {

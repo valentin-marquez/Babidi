@@ -1,13 +1,26 @@
 import type { APIRoute, APIContext } from 'astro';
 import { checkToken } from '@lib/auth';
-// import { updateUserLocation } from '@lib/db';s
 
 export const POST: APIRoute = async ({ request }: APIContext) => {
     try {
-        const { access_token } = await request.json();
-        const result = await checkToken(access_token);
+        const authorizationHeader = request.headers.get('Authorization');
+        if (!authorizationHeader) {
+            return new Response(
+                JSON.stringify({ error: 'Falta el encabezado Autorización' }),
+                {
+                    status: 401,
+                    headers: {
+                        'content-type': 'application/json'
+                    }
+                }
+            )
+        }
+
+        const token = authorizationHeader.replace('Bearer ', '');
+        const isValid = await checkToken(token);
+
         return new Response(
-            JSON.stringify({ result }),
+            JSON.stringify({ valid: isValid }),
             {
                 status: 200,
                 headers: {
@@ -15,6 +28,7 @@ export const POST: APIRoute = async ({ request }: APIContext) => {
                 }
             }
         );
+
     } catch (error) {
         console.error('Error en la solicitud POST:', error);
 
