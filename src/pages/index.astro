@@ -1,79 +1,120 @@
 ---
-import MainLayout from "@layouts/MainLayout.astro";
-import Hero from "@components/Hero.astro";
+import { POST as isOnboarding } from "@api/user/isOnboarding";
 import Card from "@components/Card.astro";
-import { PackagePlus, SearchCheck, HeartHandshake } from "lucide-astro";
-import { getUser,signOut } from "@lib/auth";
-import { POST as isOnboarding} from "@api/user/isOnboarding";
+import Hero from "@components/Hero.astro";
+import MainLayout from "@layouts/MainLayout.astro";
+import { getUser, signOut } from "@lib/auth";
+import { HeartHandshake, PackagePlus, SearchCheck } from "lucide-astro";
 
-try{
-  const token = Astro.cookies.get("sbat").value || null
+
+try {
+  const token = Astro.cookies.get("sbat").value || null;
+
   if (!token) {
-      return Astro.redirect("/login")
+    throw new Error("No token");
   }
   const { id } = await getUser(Astro.cookies.get("sbat").value);
   const req = new Request(`${Astro.url.host}/api/user/isOnboarding`, {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-      },
-      body: JSON.stringify({ id }),
-  })
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${token}`,
+    },
+    body: JSON.stringify({ id }),
+  });
   //@ts-ignore
-  const response = await isOnboarding({ request: req })
+  const response = await isOnboarding({ request: req });
   // @ts-ignores
-  const {status} = await response.json()
+  const { status } = await response.json();
 
   if (!status) {
-      return Astro.redirect("/home")
+    return Astro.redirect("/home");
   } else {
-      return Astro.redirect("/onboarding")
+    return Astro.redirect("/onboarding");
   }
 } catch (e) {
-    await signOut()
-    console.error(e)
+  await signOut();
 }
 ---
 
 <MainLayout footer={false}>
-<Hero/>
-<div class="divider"/>
-<section class="h-screen">
+  <Hero />
+  <div class="divider"></div>
+  <section class="h-screen">
     <div class="flex flex-col items-center">
-        <div class="flex flex-col items-center" id="howworks-section">
-            <h1 class="text-white text-5xl font-bold text-center font-syne lg:leading-[3.7rem] mb-5 lg:max-w-2xl drop-shadow-lg p-10" style="text-wrap: balance;">¿Cómo Funciona?</h1>
-        </div>
-        <div class="flex flex-col w-full mx-auto lg:flex-row">
-            <Card title="Listar tus Artículos" description="Comienza enumerando los artículos que deseas intercambiar en tu perfil. Agrega fotos, descripciones y detalles para atraer a otros usuarios interesados.">
-                <PackagePlus size="64px" stroke-width="1.5px" stroke="currentColor" class="mx-auto text-white" slot="icon"/>
-            </Card>
-            <Card title="Buscar lo que Necesitas" description="Explora la amplia variedad de artículos en Babidi. Utiliza nuestra función de búsqueda avanzada para encontrar exactamente lo que estás buscando.">
-                <SearchCheck size="64px" stroke-width="1.5px" stroke="currentColor" class="mx-auto text-white" slot="icon" />
-            </Card>
-            <Card title="Comunicación y Acuerdo" description="Cuando encuentres un artículo, inicia una conversación con el propietario a través del chat, discute detalles y acuerda un intercambio beneficioso.">
-                <HeartHandshake size="64px" stroke-width="1.5px" stroke="currentColor" class="mx-auto text-white" slot="icon" />
-            </Card>
-        </div>
+      <div class="flex flex-col items-center" id="howworks-section">
+        <h1
+          class="mb-5 p-10 text-center font-syne text-5xl font-bold text-white drop-shadow-lg lg:max-w-2xl lg:leading-[3.7rem]"
+          style="text-wrap: balance;"
+        >
+          ¿Cómo Funciona?
+        </h1>
+      </div>
+      <div class="mx-auto flex w-full flex-col lg:flex-row">
+        <Card
+          title="Listar tus Artículos"
+          description="Comienza enumerando los artículos que deseas intercambiar en tu perfil. Agrega fotos, descripciones y detalles para atraer a otros usuarios interesados."
+        >
+          <PackagePlus
+            size="64px"
+            stroke-width="1.5px"
+            stroke="currentColor"
+            class="mx-auto text-white"
+            slot="icon"
+          />
+        </Card>
+        <Card
+          title="Buscar lo que Necesitas"
+          description="Explora la amplia variedad de artículos en Babidi. Utiliza nuestra función de búsqueda avanzada para encontrar exactamente lo que estás buscando."
+        >
+          <SearchCheck
+            size="64px"
+            stroke-width="1.5px"
+            stroke="currentColor"
+            class="mx-auto text-white"
+            slot="icon"
+          />
+        </Card>
+        <Card
+          title="Comunicación y Acuerdo"
+          description="Cuando encuentres un artículo, inicia una conversación con el propietario a través del chat, discute detalles y acuerda un intercambio beneficioso."
+        >
+          <HeartHandshake
+            size="64px"
+            stroke-width="1.5px"
+            stroke="currentColor"
+            class="mx-auto text-white"
+            slot="icon"
+          />
+        </Card>
+      </div>
     </div>
-</section>
-<section class="mb-40">
+  </section>
+  <section class="mb-40">
     <div class="flex flex-col items-center" id="join-section">
-        <h1 class="text-white text-6xl font-bold font-syne lg:leading-[3.7rem] mb-5 max-w-lg drop-shadow-lg p-10 text-center" style="text-wrap: balance;">¡Únete a Ahora!</h1>
+      <h1
+        class="mb-5 max-w-lg p-10 text-center font-syne text-6xl font-bold text-white drop-shadow-lg lg:leading-[3.7rem]"
+        style="text-wrap: balance;"
+      >
+        ¡Únete a Ahora!
+      </h1>
     </div>
-    <div class="flex flex-row w-full justify-center">
-        <a href="login" class="btn md:btn-md lg:btn-lg btn-primary shadow-primary shadow-sm hero-btn rounded-xl hover:text-white transition duration-300 ease-in-out">Registrate</a>
+    <div class="flex w-full flex-row justify-center">
+      <a
+        href="login"
+        class="hero-btn btn btn-primary rounded-xl shadow-sm shadow-primary transition duration-300 ease-in-out md:btn-md lg:btn-lg hover:text-white"
+        >Registrate</a
+      >
     </div>
-</section>
+  </section>
 </MainLayout>
 
-
 <script>
-    const howworks = document.getElementById('howworks');
+  const howworks = document.getElementById("howworks");
 
-    // click on howworks navbar link go to howworks section
-    howworks.addEventListener('click', () => {
-        const howworksSection = document.getElementById('howworks-section');
-        howworksSection.scrollIntoView({behavior: "smooth"});
-    });
+  // click on howworks navbar link go to howworks section
+  howworks.addEventListener("click", () => {
+    const howworksSection = document.getElementById("howworks-section");
+    howworksSection.scrollIntoView({ behavior: "smooth" });
+  });
 </script>

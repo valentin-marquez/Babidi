@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Mail, Eye, EyeOff } from 'lucide-react';
+import { Mail, } from 'lucide-react';
 import { signUpEmail, signInWithGoogle } from "@lib/auth"
 
 import { GoogleIcon, SpinnerAnimation } from '@components/Utils';
@@ -94,7 +94,7 @@ function RegistrationForm() {
     <section className="flex flex-col items-center lg:space-y-10 min-h-screen inset-0 h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
       <a href="/" className="btn btn-ghost mt-4">
         <img
-          src="/logo/logo-dark.svg"
+          src="/images/logo/logo-dark.svg"
           alt="Babidi"
           width="190"
           height="40"

@@ -1,41 +1,40 @@
 ---
-import MainLayout from "@layouts/MainLayout.astro";
+import { POST as isOnboarding } from "@api/user/isOnboarding";
 import OnboardingForm from "@components/OnboardingForm";
+import MainLayout from "@layouts/MainLayout.astro";
 import { getUser, signOut } from "@lib/auth";
-import { POST as isOnboarding} from "@api/user/isOnboarding";
 
-try{
-    const token = Astro.cookies.get("sbat").value || null
-    if (!token) {
-        return Astro.redirect("/login", {status: 302})
-    }
-    const { id } = await getUser(Astro.cookies.get("sbat").value);
-    const req = new Request(`${Astro.url.host}/api/user/isOnboarding`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `${token}`,
-        },
-        body: JSON.stringify({ id }),
-    })
-    //@ts-ignore
-    const response = await isOnboarding({ request: req })
-    // @ts-ignores
-    const {status} = await response.json()
+try {
+  const token = Astro.cookies.get("sbat").value || null;
+  if (!token) {
+    return Astro.redirect("/login");
+  }
+  const { id } = await getUser(Astro.cookies.get("sbat").value);
+  const req = new Request(`${Astro.url.host}/api/user/isOnboarding`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${token}`,
+    },
+    body: JSON.stringify({ id }),
+  });
+  //@ts-ignore
+  const response = await isOnboarding({ request: req });
+  // @ts-ignores
+  const { status } = await response.json();
 
-    if (!status) {
-        return Astro.redirect("/home")
-    } else {
-        return Astro.redirect("/onboarding")
-    }
+  if (!status) {
+    return Astro.redirect("/home");
+  } else {
+    return Astro.redirect("/onboarding");
+  }
 } catch (e) {
-    console.error(e)
-    await signOut()
-    return Astro.redirect("/login")
+  console.error(e);
+  await signOut();
+  return Astro.redirect("/login");
 }
 ---
 
-
 <MainLayout navBar={false} footer={false}>
-    <OnboardingForm client:load />
+  <OnboardingForm client:load />
 </MainLayout>

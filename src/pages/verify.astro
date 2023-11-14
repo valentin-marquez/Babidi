@@ -1,47 +1,59 @@
 ---
-const req = Astro.request;
+
 ---
+
 <script is:inline>
-function getCookieExpiration(expiresInSeconds) {
+  function getCookieExpiration(expiresInSeconds) {
     const expirationDate = new Date();
     expirationDate.setTime(expirationDate.getTime() + expiresInSeconds * 1000);
     return expirationDate.toUTCString();
-}
+  }
 
-async function parseMagicLink(req) {
-    const vals = window.location.hash.substring(1).split("&").map(kv => kv.split("="))
+  async function parseMagicLink() {
+    const vals = window.location.hash
+      .substring(1)
+      .split("&")
+      .map((kv) => kv.split("="));
     const hashParams = new Map(vals);
 
     const access_token = hashParams.get("access_token");
     const expires_in = parseInt(hashParams.get("expires_in"), 10);
     const token_type = hashParams.get("token_type");
-    if (access_token && !isNaN(expires_in)){
-        const bearerToken = `${access_token}`;
-        
-        try{
-            const response = await fetch("/api/token/validate", {
-                method: "POST",
-                headers: new Headers({
-                    "Authorization": bearerToken,
-                    "Content-Type": "application/json"
-                }),
-                credentials: "same-origin",
-            });
-            
-            if (response.ok){
-                const { valid } = await response.json();
-                if (valid){
-                    document.cookie = `sbtt=${token_type}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(expires_in)};`;
-                    document.cookie = `sbat=${access_token}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(expires_in)};`;
-                    document.cookie = `sbatt=${hashParams.get("refresh_token")}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(expires_in)};`; 
-                    window.location.href = "/";
-                }
-            }
-        } catch (e) {
-            console.error("Error:", e);
-            window.location.replace("/login");
+    if (access_token && !isNaN(expires_in)) {
+      const bearerToken = `${access_token}`;
+
+      try {
+        const response = await fetch("/api/token/validate", {
+          method: "POST",
+          headers: new Headers({
+            Authorization: bearerToken,
+            "Content-Type": "application/json",
+          }),
+          credentials: "same-origin",
+        });
+
+        if (response.ok) {
+          const { valid } = await response.json();
+          if (valid) {
+            document.cookie = `sbtt=${token_type}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(
+              expires_in,
+            )};`;
+            document.cookie = `sbat=${access_token}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(
+              expires_in,
+            )};`;
+            document.cookie = `sbatt=${hashParams.get(
+              "refresh_token",
+            )}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(
+              expires_in,
+            )};`;
+            window.location.href = "/";
+          }
         }
+      } catch (e) {
+        console.error("Error:", e);
+        window.location.replace("/login");
+      }
     }
-}
-parseMagicLink();
+  }
+  parseMagicLink();
 </script>

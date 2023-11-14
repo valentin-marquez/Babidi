@@ -1,14 +1,6 @@
 ---
-import Footer from "@components/Footer.astro";
-import NavBar from "@components/NavBar.astro";
 import { ViewTransitions } from "astro:transitions";
 import "src/global.css";
-interface Props {
-  navBar?: boolean;
-  footer?: boolean;
-}
-
-const { navBar = true, footer = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -33,30 +25,26 @@ const { navBar = true, footer = true } = Astro.props;
       }
 
       localStorage.theme = document.documentElement.classList.contains("dark")
-        ? "dark"
-        : "light";
+        ? "light"
+        : "dark";
     </script>
   </head>
   <body>
     <div class="flex min-h-screen flex-col overflow-x-hidden">
-      {navBar && <NavBar />}
-
       <main id="main" class="relative flex w-full flex-col">
         <slot />
       </main>
-
-      {footer && <Footer />}
     </div>
 
     <script>
       const favicon = document.getElementById("favicon");
 
       window.onfocus = function () {
-        favicon.setAttribute("href", "favicon.svg");
+        favicon.setAttribute("href", "/favicon/favicon.svg");
       };
 
       window.onblur = function () {
-        favicon.setAttribute("href", "favicon-off.svg");
+        favicon.setAttribute("href", "/favicon/favicon-off.svg");
       };
     </script>
   </body>

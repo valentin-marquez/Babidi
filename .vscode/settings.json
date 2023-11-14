@@ -1,4 +1,22 @@
 {
     "javascript.validate.enable": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "astro",
+        "typescript",
+        "typescriptreact"
+    ],
+    "[astro]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "typescript.inlayHints.parameterNames.enabled": "all",
+    "prettier.documentSelectors": [
+        "**/*.{astro,html,js,json,md,mdx,svelte,ts,tsx,vue,yaml,yml}"
+    ],
 }

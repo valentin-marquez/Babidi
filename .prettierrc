@@ -1,0 +1,19 @@
+{
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": {
+        "parser": "astro"
+      }
+    }
+  ],
+  "singleQuote": false,
+  "semi": true,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "plugins": [
+    "prettier-plugin-astro",
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-astro-organize-imports"
+  ]
+}
