@@ -20,22 +20,6 @@ const { navBar = true, footer = true } = Astro.props;
     <link rel="mask-icon" href="/favicon/favicon.svg" color="#8D46E7" />
     <title>Babidi</title>
     <ViewTransitions />
-
-    <script is:inline>
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-
-      localStorage.theme = document.documentElement.classList.contains("dark")
-        ? "dark"
-        : "light";
-    </script>
   </head>
   <body>
     <div class="flex min-h-screen flex-col overflow-x-hidden">

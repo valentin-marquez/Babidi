@@ -1,4 +1,5 @@
 ---
+import ThemeSwitch from "@components/ThemeSwitch.astro";
 import HomeLayout from "@layouts/HomeLayout.astro";
 import { ChevronRight, LogOut, Settings } from "lucide-astro";
 ---
@@ -20,9 +21,10 @@ import { ChevronRight, LogOut, Settings } from "lucide-astro";
       >
         <li class="m-0 p-0">
           <img
-            class="mx-auto w-28"
-            src="/images/logo/logo-shape-only-dark.svg"
-            alt=""
+            class="mx-auto"
+            src="/images/logo/logo-light.svg"
+            alt="Babidi logo"
+            width="190px"
           />
         </li>
         <div class="divider-neutral divider mt-0 pt-0"></div>
@@ -71,40 +73,7 @@ import { ChevronRight, LogOut, Settings } from "lucide-astro";
           </a>
         </li>
         <li>
-          <label class="flex cursor-pointer gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              ><circle cx="12" cy="12" r="5"></circle><path
-                d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
-              ></path></svg
-            >
-            <input
-              type="checkbox"
-              value="synthwave"
-              class="theme-controller toggle"
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              ><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-              ></path></svg
-            >
-          </label>
+          <ThemeSwitch />
         </li>
         <div class="divider"></div>
         <li>

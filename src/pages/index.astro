@@ -6,7 +6,6 @@ import MainLayout from "@layouts/MainLayout.astro";
 import { getUser, signOut } from "@lib/auth";
 import { HeartHandshake, PackagePlus, SearchCheck } from "lucide-astro";
 
-
 try {
   const token = Astro.cookies.get("sbat").value || null;
 
