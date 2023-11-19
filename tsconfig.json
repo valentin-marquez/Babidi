@@ -24,6 +24,12 @@
       ],
       "@api/*": [
         "src/pages/api/*"
+      ],
+      "@app/*": [
+        "src/components/app/*"
+      ],
+      "@db/*": [
+        "src/lib/db.ts"
       ]
     },
     "jsx": "react-jsx",

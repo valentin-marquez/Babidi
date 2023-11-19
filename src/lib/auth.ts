@@ -86,7 +86,7 @@ export async function signOut() {
 
 export async function CreateUserProfile(user: Profile): Promise<boolean> {
     try {
-        let profile_data = {
+        const profile_data = {
             user_id: user.id,
             full_name: user.fullName,
             username: user.username,
@@ -106,7 +106,7 @@ export async function CreateUserProfile(user: Profile): Promise<boolean> {
         }
 
         if (user.geometry.latitude && user.geometry.longitude) {
-            let location: UserLocation = {
+            const location: UserLocation = {
                 id: user.id,
                 latitude: user.geometry.latitude,
                 longitude: user.geometry.longitude,

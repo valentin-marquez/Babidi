@@ -11,20 +11,18 @@ module.exports = {
     },
   },
   daisyui: {
+    darktheme: "darken",
     themes: [
       'light',
       {
         darken: {
+          ...require("daisyui/src/theming/themes")["dark"],
           primary: "#794cff",
           secondary: "#4f359e",
           accent: "#794cff",
           neutral: "#28252d",
           "base-100": "#151519",
-          info: "#3bb2d0",
-          success: "#00b294",
-          warning: "#ffcf33",
-          error: "#ef476f",
-          white: "#ffffff",
+          active: "#794cff"
         },
       },
     ],

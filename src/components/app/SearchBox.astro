@@ -1,0 +1,35 @@
+---
+import { Search } from "lucide-astro";
+---
+
+<form
+  action="/search"
+  class="relative flex w-full items-center justify-between md:w-auto"
+>
+  <input
+    type="search"
+    name="query"
+    placeholder="Buscar Intercambio"
+    required
+    class="h-10 w-full flex-1 rounded-md border border-gray-700 bg-transparent px-4 py-2 text-gray-700 placeholder-gray-400 ring-primary transition-all duration-300 focus:border-primary focus:text-white focus:outline-none focus:ring dark:text-gray-200 dark:placeholder-gray-600"
+  />
+  <button
+    type="submit"
+    class="hover:bg-primary-dark focus:bg-primary-dark ml-2 transform rounded-md bg-primary px-4 py-2 text-white transition-all duration-300 hover:scale-105 focus:outline-none"
+  >
+    <Search class="h-6 w-6" />
+  </button>
+
+  <!-- Estilos para la opción de eliminar texto -->
+  <style>
+    input[type="search"]::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 1em;
+      width: 1em;
+      background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXgiPjxwYXRoIGQ9Ik0xOCA2IDYgMTgiLz48cGF0aCBkPSJtNiA2IDEyIDEyIi8+PC9zdmc+")
+        center/contain no-repeat;
+      cursor: pointer;
+    }
+  </style>
+</form>

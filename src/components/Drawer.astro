@@ -1,0 +1,144 @@
+---
+import { ChevronRight, LogOut, Settings } from "lucide-astro";
+interface Props {
+  name: string;
+  username: string;
+  initials?: string;
+}
+
+const getInitials = (fullname: string): string => {
+  const words = fullname.split(" ");
+  const firstInitial = words[0][0].toUpperCase();
+  const secondInitial = words.length > 1 ? words[1][0].toUpperCase() : "D";
+
+  return `${firstInitial}${secondInitial}`;
+};
+
+const { name, username, initials = getInitials(name) } = Astro.props;
+---
+
+<div class="drawer" id="drawer">
+  <input type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <main>
+      <slot />
+    </main>
+  </div>
+  <div class="drawer-side">
+    <label for="drawer" class="drawer-overlay"></label>
+    <ul
+      class="w-25 menu min-h-full overflow-y-auto border-opacity-50 bg-base-200 font-sora text-base-content shadow-lg"
+    >
+      <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne">
+        General
+      </h2>
+      <div class="active-primary">
+        <li>
+          <a href="/home">
+            <ChevronRight />
+            <span>Inicio</span>
+          </a>
+        </li>
+        <li>
+          <a href="/explore">
+            <ChevronRight />
+            <span>Explorar Intercambios</span>
+          </a>
+        </li>
+        <li>
+          <a href="/exchanges">
+            <ChevronRight />
+            <span>Mis Articulos</span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <ChevronRight />
+            <span>Publicar Articulo</span>
+          </a>
+        </li>
+        <li>
+          <a>
+            <ChevronRight />
+             Mensajes
+          </a>
+        </li>
+      </div>
+      <div class="divider"></div>
+      <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne">
+        Cuenta
+      </h2>
+      <li>
+        <a>
+          <Settings className="font-normal" />
+           Configuración
+        </a>
+      </li>
+      <li>
+        <a>
+          <LogOut className="font-normal" />
+           Cerrar Sesión
+        </a>
+      </li>
+      <div class="divider"></div>
+      <li>
+        <div class="avatar placeholder">
+          <div class="w-10 rounded-full bg-neutral text-neutral-content">
+            <span class="text-2xl">{initials}</span>
+          </div>
+          <span>
+            <div class="flex flex-col">
+              <p class="capitalize">{name}</p>
+              <p class="capitalize">@{username}</p>
+            </div>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <script is:inline>
+    function setupDrawer() {
+      const drawer = document.getElementById("drawer");
+      const checkbox = document.getElementById("toggleMenu");
+
+      function toggleSidebar(status) {
+        drawer.classList.toggle("drawer-open", status);
+      }
+
+      function setActiveLink() {
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll(".menu a");
+
+        links.forEach((link) => {
+          const linkPath = link.getAttribute("href");
+
+          if (linkPath && currentPath.includes(linkPath)) {
+            link.classList.add("active");
+          } else {
+            link.classList.remove("active");
+          }
+        });
+      }
+
+      // Agrega la clase 'active' al cargar la página
+      setActiveLink();
+
+      console.log(window.innerWidth);
+
+      if (window.innerWidth > 1360) {
+        checkbox.checked = true;
+        toggleSidebar(true);
+      }
+
+      checkbox.addEventListener("change", function (e) {
+        toggleSidebar(e.target.checked);
+      });
+
+      // Actualiza la clase 'active' al cambiar la ruta
+      window.addEventListener("popstate", setActiveLink);
+    }
+
+    document.addEventListener("DOMContentLoaded", setupDrawer);
+  </script>
+</div>

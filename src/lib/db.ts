@@ -2,9 +2,7 @@ import { prisma } from '@lib/prisma-client';
 import { supabase } from '@lib/supabase-client'
 import type { UserLocation } from '@lib/interfaces';
 
-
-
-export async function updateUserLocation(userLocation: UserLocation): Promise<Boolean> {
+export async function updateUserLocation(userLocation: UserLocation): Promise<boolean> {
     const { error } = await supabase.rpc('update_user_location', { userid: userLocation.id, longitude: userLocation.longitude, latitude: userLocation.latitude })
     if (error) {
         console.error(error)
@@ -36,4 +34,28 @@ export async function setIsOnboarding(userId: string, isOnboarding: boolean): Pr
     })
     console.log(user)
     return user.is_onboarding
+}
+
+interface Profile {
+    id: string,
+    username: string,
+    full_name: string,
+    status: string,
+}
+
+export async function getProfileInfo(id: string): Promise<Profile> {
+    const user = await prisma.profiles.findUnique({
+        where: {
+            user_id: id
+        },
+        select: {
+            user_id: true,
+            username: true,
+            full_name: true,
+            status: true,
+        }
+    }).finally(() => {
+        prisma.$disconnect()
+    })
+    return user;
 }

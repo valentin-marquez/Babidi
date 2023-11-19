@@ -1,12 +1,10 @@
-import type { APIRoute, APIContext } from 'astro';
-import { TokenVerification } from '@lib/decorators';
-import { getUser } from '@lib/auth';
+import type { APIRoute, } from 'astro';
+import { getProfileInfo } from '@lib/db';
 
-
-export const POST: APIRoute = TokenVerification(async ({ request }: APIContext) => {
+export const GET: APIRoute = async ({ params, request }: APIContext) => {
     try {
-        const token = request.headers.get('Authorization');
-        const user = await getUser(token);
+        const id: string = params.id;
+        const user = await getProfileInfo(id);
         if (user) {
             return new Response(
                 JSON.stringify({ user }),
@@ -41,4 +39,4 @@ export const POST: APIRoute = TokenVerification(async ({ request }: APIContext) 
             }
         );
     }
-})
+}
