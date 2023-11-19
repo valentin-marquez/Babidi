@@ -4,10 +4,28 @@ import { Sun, Moon } from 'lucide-react';
 
 
 export function Logo() {
+  // check if localStorage is available
+  const isLocalStorageAvailable = typeof localStorage !== 'undefined';
+
+  // check localstorage for theme if it exists, if not set it to darken
+  const [theme, setTheme] = useState(isLocalStorageAvailable ? localStorage.getItem("theme") || "darken" : "darken");
+
+  const themes = {
+    darken: "/images/logo/logo-dark.svg",
+    lighten: "/images/logo/logo-light.svg"
+  }
+
+  // set the theme in localstorage
+  useEffect(() => {
+    if (isLocalStorageAvailable) {
+      localStorage.setItem("theme", theme);
+    }
+  }, [theme, isLocalStorageAvailable]);
+
   return (
     <a href="/" className="btn btn-ghost mt-4">
       <img
-        src="/logo/logo-dark.svg"
+        src={themes[theme]}
         alt="Babidi"
         width="190"
         height="40"

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Logo, } from "@components/Utils";
 import { signOut, CreateUserProfile } from '@lib/auth';
 import Cookies from 'js-cookie';
-
 import type { Profile } from '@lib/interfaces';
+
 
 function OnboardingForm() {
     const [UserID, setUserID] = useState('');

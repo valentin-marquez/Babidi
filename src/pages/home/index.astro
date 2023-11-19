@@ -3,6 +3,8 @@ import HomeLayout from "@layouts/HomeLayout.astro";
 import { getUser } from "@lib/auth";
 import { getProfileInfo } from "@lib/db";
 
+
+
 const token = Astro.cookies.has("sbat")
   ? Astro.cookies.get("sbat").value
   : null;
@@ -12,6 +14,11 @@ if (token === null) {
 
 const { id } = await getUser(token);
 const user = await getProfileInfo(id);
+
+if (user === null) {
+  return Astro.redirect("/login");
+}
+
 const profile = {
   id: user.id,
   username: user.username,

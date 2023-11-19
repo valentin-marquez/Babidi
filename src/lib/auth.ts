@@ -51,7 +51,7 @@ export async function signInWithGoogle() {
     return await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: "http://localhost:4321/verify"
+            redirectTo: import.meta.env.DEV ? "http://localhost:4321/verify" : "https://babidi.vercel.app/verify",
         }
     })
 }
@@ -111,7 +111,7 @@ export async function CreateUserProfile(user: Profile): Promise<boolean> {
                 latitude: user.geometry.latitude,
                 longitude: user.geometry.longitude,
             }
-            const response = await fetch("/api/user/updateLocation", {
+            await fetch("/api/user/updateLocation", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
