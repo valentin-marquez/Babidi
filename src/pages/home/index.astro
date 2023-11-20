@@ -1,9 +1,8 @@
 ---
+import CarouselItems from "@app/CarouselItems";
 import HomeLayout from "@layouts/HomeLayout.astro";
 import { getUser } from "@lib/auth";
-import { getProfileInfo } from "@lib/db";
-
-
+import { getCategories, getProfileInfo } from "@lib/db";
 
 const token = Astro.cookies.has("sbat")
   ? Astro.cookies.get("sbat").value
@@ -25,13 +24,10 @@ const profile = {
   full_name: user.full_name,
   status: user.status,
 };
+
+const categories = await getCategories();
 ---
 
 <HomeLayout profile={profile}>
-  <div class="h-20 w-20">
-    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis voluptas
-    excepturi laboriosam doloremque dolorem quibusdam, odio facere quod porro
-    sunt hic beatae eligendi, corrupti praesentium dignissimos facilis?
-    Architecto, exercitationem temporibus.
-  </div>
+  <CarouselItems categories={categories} client:load />
 </HomeLayout>

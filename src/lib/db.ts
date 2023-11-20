@@ -58,3 +58,13 @@ export async function getProfileInfo(id: string): Promise<Profile> {
     })
     return user;
 }
+
+
+export async function getCategories(): Promise<string[]> {
+    const categories = await prisma.categories.findMany({
+        select: {
+            name: true
+        }
+    })
+    return categories.map(category => category.name)
+}

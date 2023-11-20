@@ -1,5 +1,6 @@
 ---
 import { ChevronRight, LogOut, Settings } from "lucide-astro";
+import ThemeSwitch from "./ThemeSwitch.astro";
 interface Props {
   name: string;
   username: string;
@@ -80,6 +81,9 @@ const { name, username, initials = getInitials(name) } = Astro.props;
            Cerrar Sesión
         </a>
       </li>
+      <li>
+        <ThemeSwitch />
+      </li>
       <div class="divider"></div>
       <li>
         <div class="avatar placeholder">
@@ -125,12 +129,6 @@ const { name, username, initials = getInitials(name) } = Astro.props;
       setActiveLink();
 
       console.log(window.innerWidth);
-
-      if (window.innerWidth > 1360) {
-        checkbox.checked = true;
-        toggleSidebar(true);
-      }
-
       checkbox.addEventListener("change", function (e) {
         toggleSidebar(e.target.checked);
       });
