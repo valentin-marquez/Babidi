@@ -5,18 +5,22 @@ import MainLayout from "@layouts/MainLayout.astro";
 import { getUser } from "@lib/auth";
 import { getIsOnboarding } from "@lib/db";
 import { HeartHandshake, PackagePlus, SearchCheck } from "lucide-astro";
-if (Astro.cookies.has("sbat") && Astro.cookies.get("sbat").value) {
-  const token = Astro.cookies.get("sbat").value || null;
+try {
+  if (Astro.cookies.has("sbat") && Astro.cookies.get("sbat").value) {
+    const token = Astro.cookies.get("sbat").value || null;
 
-  const { id } = await getUser(token);
-  if (id) {
-    const status = await getIsOnboarding(id);
-    if (status) {
-      return Astro.redirect("/onboarding");
-    } else {
-      return Astro.redirect("/home");
+    const { id } = await getUser(token);
+    if (id) {
+      const status = await getIsOnboarding(id);
+      if (status) {
+        return Astro.redirect("/onboarding");
+      } else {
+        return Astro.redirect("/home");
+      }
     }
   }
+} catch (e) {
+  null;
 }
 ---
 
