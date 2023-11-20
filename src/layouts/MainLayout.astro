@@ -36,11 +36,11 @@ const { navBar = true, footer = true } = Astro.props;
       const favicon = document.getElementById("favicon");
 
       window.onfocus = function () {
-        favicon.setAttribute("href", "favicon.svg");
+        favicon.setAttribute("href", "/favicon/favicon.svg");
       };
 
       window.onblur = function () {
-        favicon.setAttribute("href", "favicon-off.svg");
+        favicon.setAttribute("href", "/favicon/favicon-off.svg");
       };
     </script>
   </body>
