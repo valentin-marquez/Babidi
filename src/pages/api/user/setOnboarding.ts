@@ -15,7 +15,7 @@ export const POST: APIRoute = TokenVerification(async ({ request }: APIContext) 
     try {
         const { userId, isOnboarding } = await request.json();
         const updated = await setIsOnboarding(userId, isOnboarding);
-        if (updated) {
+        if (!updated) {
             return new Response(
                 JSON.stringify({ success: true }),
                 {

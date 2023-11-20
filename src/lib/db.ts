@@ -32,7 +32,6 @@ export async function setIsOnboarding(userId: string, isOnboarding: boolean): Pr
             is_onboarding: isOnboarding
         }
     })
-    console.log(user)
     return user.is_onboarding
 }
 

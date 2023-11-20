@@ -34,6 +34,7 @@ function OnboardingForm() {
                 });
 
                 if (!response.ok) {
+                    console.log(response.status);
                     console.log(response.statusText);
                     throw new Error(response.statusText);
                 }
@@ -59,7 +60,6 @@ function OnboardingForm() {
     }, []);
 
     const handleLoginWithAnotherEmail = async () => {
-        "use server";
         // Clear any previous errors
         setErrors({
             fullName: '',
@@ -78,8 +78,6 @@ function OnboardingForm() {
     }
 
     const handleFormSubmit = async () => {
-        // Clear any previous errors
-        "use server";
         setErrors({
             fullName: '',
             nickname: '',
