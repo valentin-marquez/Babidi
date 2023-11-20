@@ -3,15 +3,15 @@ import { POST as isOnboarding } from "@api/user/isOnboarding";
 import Card from "@components/Card.astro";
 import Hero from "@components/Hero.astro";
 import MainLayout from "@layouts/MainLayout.astro";
-import { getUser, signOut } from "@lib/auth";
+import { getUser } from "@lib/auth";
 import { HeartHandshake, PackagePlus, SearchCheck } from "lucide-astro";
 
 try {
-  const token = Astro.cookies.get("sbat").value || null;
-
-  if (!token) {
+  if (!Astro.cookies.has("sbat")) {
     throw new Error("No token");
   }
+  const token = Astro.cookies.get("sbat").value;
+
   const { id } = await getUser(Astro.cookies.get("sbat").value);
   const req = new Request(`${Astro.url.host}/api/user/isOnboarding`, {
     method: "POST",
@@ -32,7 +32,7 @@ try {
     return Astro.redirect("/onboarding");
   }
 } catch (e) {
-  await signOut();
+  console.log(e);
 }
 ---
 

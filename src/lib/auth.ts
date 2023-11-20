@@ -20,7 +20,7 @@ export async function signUpEmail(email: string, password: string) {
         email: email,
         password: password,
         options: {
-            emailRedirectTo: "http://localhost:4321/verify",
+            emailRedirectTo: import.meta.env.DEV ? "http://localhost:4321/verify" : "https://babidi.vercel.app/verify",
         }
     })
     let authError = null;
