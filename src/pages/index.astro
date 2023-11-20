@@ -6,11 +6,8 @@ import MainLayout from "@layouts/MainLayout.astro";
 import { getUser } from "@lib/auth";
 import { HeartHandshake, PackagePlus, SearchCheck } from "lucide-astro";
 
-try {
-  if (!Astro.cookies.has("sbat")) {
-    throw new Error("No token");
-  }
-  const token = Astro.cookies.get("sbat").value;
+if (Astro.cookies.has("sbat") && Astro.cookies.get("sbat").value) {
+  const token = Astro.cookies.get("sbat").value || null;
 
   const { id } = await getUser(Astro.cookies.get("sbat").value);
   const req = new Request(`${Astro.url.host}/api/user/isOnboarding`, {
@@ -31,8 +28,6 @@ try {
   } else {
     return Astro.redirect("/onboarding");
   }
-} catch (e) {
-  console.log(e);
 }
 ---
 
