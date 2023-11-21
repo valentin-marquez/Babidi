@@ -26,8 +26,11 @@ const getCategoryIcon = (category: string): JSX.Element => {
 const CategoryCard: React.FC<CategoryProps> = ({ category }) => {
     return (
         <a href="#" className="group">
-            <div
-                className="flex h-40 w-36 flex-col items-center rounded-xl bg-base-200 p-5 transition-transform duration-300 ease-in-out hover:border hover:border-primary hover:transition-all "
+            <div className="flex border-neutral focus:shadow-lg focus:shadow-primary h-40 w-36 flex-col items-center rounded-xl p-5 transition-transform duration-300 ease-in-out hover:border hover:border-primary hover:transition-all bg-gradient-to-br from-base-200 to-base-300"
+                style={{
+                    boxShadow: "0 0 20px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 0, 0, 0.1) inset",
+                    transition: "box-shadow 200ms ease-in-out, border-color 200ms ease-in-out",
+                }}
             >
                 {getCategoryIcon(category) && (
                     <div className="m-auto transform transition-all group-hover:scale-110 group-hover:text-primary flex items-center">
@@ -36,13 +39,15 @@ const CategoryCard: React.FC<CategoryProps> = ({ category }) => {
                 )}
                 <p
                     className="line-clamp-2 text-center font-sora text-sm font-bold text-base-content"
-                    style={{ textWrap: "balance" }}
+                    style={{
+                        textWrap: "balance",
+                        transition: "color 200ms ease-in-out",
+                    }}
                 >
                     {category}
                 </p>
             </div>
         </a>
-
     );
 };
 

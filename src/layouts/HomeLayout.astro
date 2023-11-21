@@ -17,7 +17,7 @@ const { profile } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es-ES" data-theme="darken">
+<html lang="es-ES" data-theme="darken" class="bg-base-100">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -80,7 +80,7 @@ const { profile } = Astro.props;
         if (htmlElement) {
           return htmlElement.getAttribute("data-theme");
         }
-        return "lighten";
+        return "light";
       };
 
       const logo = {

@@ -12,7 +12,7 @@ export function Logo() {
 
   const themes = {
     darken: "/images/logo/logo-dark.svg",
-    lighten: "/images/logo/logo-light.svg"
+    light: "/images/logo/logo-light.svg"
   }
 
   // set the theme in localstorage

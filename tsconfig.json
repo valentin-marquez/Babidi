@@ -1,6 +1,11 @@
 {
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
+    "verbatimModuleSyntax": true,
+    "types": [
+      "vite/client",
+      "astro/client",
+    ],
     "target": "ES5",
     "plugins": [
       {

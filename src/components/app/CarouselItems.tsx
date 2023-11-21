@@ -57,7 +57,7 @@ const CarouselItems = ({ categories }) => {
                             </h2>
                             <a
                                 href="#"
-                                className="text-gray btn btn-ghost rounded-btn btn-sm ml-4 inline-flex items-center font-sora text-sm leading-3 text-base-content"
+                                className="text-gray btn btn-ghost rounded-btn btn-xs ml-4 inline-flex items-center font-sora text-sm text-base-content transition-colors capitalize hover:text-focus-content"
                             >
                                 Todas las Categorías
                                 <ChevronRight className="text-bold ml-1 h-5 w-5" />
