@@ -23,11 +23,23 @@ const profile = {
   username: user.username,
   full_name: user.full_name,
   status: user.status,
+  initials: user.full_name
+    .split(" ")
+    .map((n) => n[0])
+    .join(""),
 };
-
 const categories = await getCategories();
 ---
 
 <HomeLayout profile={profile}>
   <CarouselItems categories={categories} client:load />
+
+  <script id="initvars" define:vars={{ profile, categories, id }}>
+    let profileJson = JSON.stringify({ profile });
+    let categoriesJson = JSON.stringify({ categories });
+    localStorage.setItem("categories", categoriesJson);
+    localStorage.setItem("profile", profileJson);
+    localStorage.setItem("clientid", id);
+    document.getElementById("initvars").remove();
+  </script>
 </HomeLayout>

@@ -47,46 +47,44 @@ const CarouselItems = ({ categories }) => {
     };
 
     return (
-        <MagicMotion >
-            <div className="w-11/12 mx-auto container">
-                <div className="m-6 flex flex-col gap-4">
-                    <div className="mb-4 inline-flex items-center">
-                        <div className="inline-flex flex-1 items-center">
-                            <h2 className="title pointer-events-none font-sora text-3xl font-bold leading-3 brightness-150">
-                                Explorar por Categoría
-                            </h2>
-                            <a
-                                href="#"
-                                className="text-gray btn btn-ghost rounded-btn btn-xs ml-4 inline-flex items-center font-sora text-sm text-base-content transition-colors capitalize hover:text-focus-content"
-                            >
-                                Todas las Categorías
-                                <ChevronRight className="text-bold ml-1 h-5 w-5" />
-                            </a>
-                        </div>
-                        <div className="flex-0 inline-flex space-x-4 items-center">
-                            <span
-                                className={`btn btn-primary btn-sm ${isLeftDisabled ? 'btn-disabled' : ''}`}
-                                onClick={() => scroll(-2)}
-                            >
-                                <ChevronLeft className="text-bold h-5 w-5" />
-                            </span>
-                            <span
-                                className={`btn btn-primary btn-sm ${isRightDisabled ? 'btn-disabled' : ''}`}
-                                onClick={() => scroll(2)}
-                            >
-                                <ChevronRight className="text-bold h-5 w-5" />
-                            </span>
-                        </div>
+        <div className="w-11/12 mx-auto container">
+            <div className="m-6 flex flex-col gap-4">
+                <div className="mb-4 inline-flex items-center">
+                    <div className="inline-flex flex-1 items-center">
+                        <h2 className="title pointer-events-none font-sora text-3xl font-bold leading-3 brightness-150">
+                            Explorar por Categoría
+                        </h2>
+                        <a
+                            href="#"
+                            className="text-gray btn btn-ghost rounded-btn btn-xs ml-4 inline-flex items-center font-sora text-sm text-base-content transition-colors capitalize hover:text-focus-content"
+                        >
+                            Todas las Categorías
+                            <ChevronRight className="text-bold ml-1 h-5 w-5" />
+                        </a>
                     </div>
-                    <div className="grid grid-flow-col auto-cols-max gap-4 overflow-x-hidden" ref={containerRef}>
-                        {categories &&
-                            categories.map((category, index) => (
-                                <CategoryCard key={index} category={category} />
-                            ))}
+                    <div className="flex-0 inline-flex space-x-4 items-center">
+                        <span
+                            className={`btn btn-primary btn-sm ${isLeftDisabled ? 'btn-disabled' : ''}`}
+                            onClick={() => scroll(-2)}
+                        >
+                            <ChevronLeft className="text-bold h-5 w-5" />
+                        </span>
+                        <span
+                            className={`btn btn-primary btn-sm ${isRightDisabled ? 'btn-disabled' : ''}`}
+                            onClick={() => scroll(2)}
+                        >
+                            <ChevronRight className="text-bold h-5 w-5" />
+                        </span>
                     </div>
                 </div>
+                <div className="grid grid-flow-col auto-cols-max gap-4 overflow-x-hidden" ref={containerRef}>
+                    {categories &&
+                        categories.map((category, index) => (
+                            <CategoryCard key={index} category={category} />
+                        ))}
+                </div>
             </div>
-        </MagicMotion>
+        </div>
     );
 };
 

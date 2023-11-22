@@ -1,6 +1,7 @@
 ---
-import { LocationButton, NewArticleButton } from "@app/Buttons";
+import LocationButton from "@app/LocationButton";
 import SearchBox from "@app/SearchBox.astro";
+import PostButton from "@app/UploadButton";
 import { Menu, X } from "lucide-astro";
 ---
 
@@ -31,6 +32,6 @@ import { Menu, X } from "lucide-astro";
   </div>
   <div class="navbar-end gap-3">
     <LocationButton client:only />
-    <NewArticleButton client:load />
+    <PostButton client:only />
   </div>
 </div>

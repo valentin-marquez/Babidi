@@ -37,7 +37,7 @@ module.exports = {
           "base-300": "#252944",
           active: "#794cff",
           "text-white": "#fbfcfc",
-          "focus-content": "#7f00ff",
+          "high-primary": "#7f00ff",
         },
 
       },
