@@ -3,17 +3,6 @@ import DrawerComponent from "@components/Drawer.astro";
 import Navbar from "@components/app/Navbar.astro";
 import { ViewTransitions } from "astro:transitions";
 import "src/global.css";
-// const { user_id, username, full_name, status } = user;
-interface Props {
-  profile: {
-    id: string;
-    username: string;
-    full_name: string;
-    status: string;
-  };
-}
-
-const { profile } = Astro.props;
 ---
 
 <!doctype html>
@@ -25,91 +14,12 @@ const { profile } = Astro.props;
     <link rel="mask-icon" href="/favicon/favicon.svg" color="#8D46E7" />
     <title>Babidi</title>
     <ViewTransitions />
-    <script is:inline>
-      document.addEventListener("DOMContentLoaded", function () {
-        const setTheme = (newTheme) => {
-          const htmlElement = document.querySelector("html");
-          const themeToggle = document.getElementById("themeToggle");
-          if (htmlElement && themeToggle) {
-            htmlElement.setAttribute("data-theme", newTheme);
-            themeToggle.checked = newTheme === "light";
-            // Emitir un evento personalizado para indicar el cambio de tema
-            const themeChangeEvent = new CustomEvent("themeChange", {
-              detail: newTheme,
-            });
-            document.dispatchEvent(themeChangeEvent);
-          }
-          window.localStorage.setItem("theme", newTheme);
-        };
-
-        const toggleTheme = () => {
-          const currentTheme = document
-            .querySelector("html")
-            .getAttribute("data-theme");
-          const newTheme = currentTheme === "darken" ? "light" : "darken";
-          setTheme(newTheme);
-        };
-
-        const handleToggleClick = () => {
-          toggleTheme();
-        };
-
-        document
-          .getElementById("themeToggle")
-          .addEventListener("click", handleToggleClick);
-
-        // Set initial theme
-        const savedTheme =
-          localStorage.getItem("theme") ||
-          (window.matchMedia("(prefers-color-scheme: darken)").matches
-            ? "darken"
-            : "light");
-        setTheme(savedTheme);
-
-        // Save theme before page reload
-        window.addEventListener("beforeunload", function () {
-          const currentTheme = document
-            .querySelector("html")
-            .getAttribute("data-theme");
-          window.localStorage.setItem("theme", currentTheme);
-        });
-      });
-
-      getTheme = () => {
-        const htmlElement = document.querySelector("html");
-        if (htmlElement) {
-          return htmlElement.getAttribute("data-theme");
-        }
-        return "light";
-      };
-
-      const logo = {
-        light: "/images/logo/logo-light.svg",
-        darken: "/images/logo/logo-dark.svg",
-      };
-
-      const logoElement = document.getElementById("logo");
-      if (logoElement) {
-        logoElement.src = logo[getTheme()];
-      }
-
-      // create a logo handler to change the logo when the theme changes
-      const logoHandler = (event) => {
-        const logoElement = document.getElementById("logo");
-        if (logoElement) {
-          logoElement.src = logo[event.detail];
-        }
-      };
-
-      // listen for the theme change event
-      document.addEventListener("themeChange", logoHandler);
-    </script>
   </head>
   <body>
     <div class="flex min-h-screen flex-col overflow-x-hidden">
       <main id="main" class="relative flex w-full flex-col">
         <Navbar />
-        <DrawerComponent name={profile.full_name} username={profile.username}>
+        <DrawerComponent>
           <slot />
         </DrawerComponent>
       </main>

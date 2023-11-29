@@ -1,37 +1,87 @@
 ---
-import LocationButton from "@app/LocationButton";
 import SearchBox from "@app/SearchBox.astro";
 import PostButton from "@app/UploadButton";
+import { Logo } from "@components/Utils";
+import { getUser } from "@lib/auth";
+import { getCategories, getProfileInfo, getStatusTypes } from "@lib/db";
 import { Menu, X } from "lucide-astro";
+
+const token = Astro.cookies.has("sbat")
+  ? Astro.cookies.get("sbat").value
+  : null;
+
+let profile = null;
+
+if (token) {
+  const { id } = await getUser(token);
+  const user = await getProfileInfo(id);
+
+  profile = {
+    id: user.id,
+    username: user.username,
+    full_name: user.full_name,
+    status: user.status,
+    initials: user.full_name
+      .split(" ")
+      .map((n) => n[0])
+      .join(""),
+  };
+}
+
+const categories = await getCategories();
+const statusTypes = await getStatusTypes();
 ---
 
-<div class="navbar z-10 bg-base-200 shadow-lg">
+<div class="navbar z-10 bg-base-200">
   <div class="navbar-start">
-    <div class="flex-none">
-      <label class="btn btn-square btn-ghost swap swap-rotate">
-        <input type="checkbox" id="toggleMenu" />
-        <Menu class="swap-off fill-current" id="showMenu" />
+    {
+      profile && (
+        <div class="flex-none">
+          <label class="btn btn-square btn-ghost swap swap-rotate">
+            <input type="checkbox" id="toggleMenu" />
+            <Menu class="swap-off fill-current" id="showMenu" />
 
-        <X class="swap-on fill-current" id="closeMenu" />
-      </label>
-    </div>
+            <X class="swap-on fill-current" id="closeMenu" />
+          </label>
+        </div>
+      )
+    }
     <div class="inline-flex flex-1 gap-3 lg:navbar-start">
-      <a class="btn btn-ghost text-xl" href="/home">
-        <img
-          class="mx-auto"
-          src="/images/logo/logo-dark.svg"
-          alt="Babidi logo"
-          width="190px"
-          id="logo"
-        />
-      </a>
+      <Logo client:load />
     </div>
   </div>
   <div class="navbar-center hidden lg:flex">
     <SearchBox />
   </div>
-  <div class="navbar-end gap-3">
-    <LocationButton client:only />
-    <PostButton client:only />
-  </div>
+  {
+    profile ? (
+      <div class="navbar-end gap-3">
+        <PostButton
+          profile={profile}
+          categories={categories}
+          statusTypes={statusTypes}
+          client:only
+        />
+      </div>
+    ) : (
+      <div class="navbar-end">
+        <div class="flex flex-row space-x-5">
+          <a
+            href="/login"
+            class="items-center font-sora transition-colors duration-200 hover:text-white lg:flex"
+            data-astro-prefetch
+          >
+            Entrar
+          </a>
+          <a
+            href="/signup"
+            class="rounded-full border-2 border-gray-600 p-3 font-sora transition-colors duration-200 hover:border-primary hover:text-white lg:flex"
+            data-astro-prefetch
+          >
+            Registrarse
+          </a>
+        </div>
+      </div>
+    )
+  }
 </div>

@@ -1,19 +1,20 @@
-
-import React, { useState, useEffect } from 'react';
-import { Sun, Moon } from 'lucide-react';
-
+import React, { useState, useEffect } from "react";
 
 export function Logo() {
   // check if localStorage is available
-  const isLocalStorageAvailable = typeof localStorage !== 'undefined';
+  const isLocalStorageAvailable = typeof localStorage !== "undefined";
 
   // check localstorage for theme if it exists, if not set it to darken
-  const [theme, setTheme] = useState(isLocalStorageAvailable ? localStorage.getItem("theme") || "darken" : "darken");
+  const [theme, setTheme] = useState(
+    isLocalStorageAvailable
+      ? localStorage.getItem("theme") || "darken"
+      : "darken",
+  );
 
   const themes = {
     darken: "/images/logo/logo-dark.svg",
-    light: "/images/logo/logo-light.svg"
-  }
+    light: "/images/logo/logo-light.svg",
+  };
 
   // set the theme in localstorage
   useEffect(() => {
@@ -22,8 +23,22 @@ export function Logo() {
     }
   }, [theme, isLocalStorageAvailable]);
 
+  // listen for theme changes
+  useEffect(() => {
+    const handleThemeChange = (event: CustomEvent) => {
+      setTheme(event.detail);
+    };
+
+    window.addEventListener("themeChange", handleThemeChange);
+
+    // cleanup function
+    return () => {
+      window.removeEventListener("themeChange", handleThemeChange);
+    };
+  }, []);
+
   return (
-    <a href="/" className="btn btn-ghost mt-4">
+    <a href="/" className="btn btn-ghost text-xl">
       <img
         src={themes[theme]}
         alt="Babidi"
@@ -32,22 +47,68 @@ export function Logo() {
         decoding="async"
       />
     </a>
-  )
+  );
 }
 
+interface SpinnerAnimationProps {
+  styles?: string;
+}
 
-export function SpinnerAnimation() {
+export function SpinnerAnimation({
+  styles = "mr-2 inline h-5 w-5 animate-spin text-gray-400",
+}: SpinnerAnimationProps) {
   return (
-    <svg aria-hidden="true" role="status" className="mr-2 inline h-5 w-5 animate-spin text-gray-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"></path>
-      <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="rgb(0 0 0)"></path>
+    <svg
+      aria-hidden="true"
+      role="status"
+      className={styles}
+      viewBox="0 0 100 101"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+        fill="currentColor"
+      ></path>
+      <path
+        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+        fill="currentColor"
+      ></path>
     </svg>
-  )
+  );
+}
+interface CompletionAnimationProps {
+  slug: string;
 }
 
+export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
+  slug,
+}) => {
+  return (
+    <div className="flex h-full flex-col items-center justify-center space-y-4 rounded-lg">
+      <h2 className="font-syne text-2xl font-bold text-current">
+        ¡Objeto Publicado!
+      </h2>
+      <a href={`${location.origin}/post/${slug}`}>
+        <h2 className=" link-primary link cursor-pointer font-sora text-xl no-underline">
+          Ver publicación!
+        </h2>
+      </a>
+    </div>
+  );
+};
+
+export const DoubleSpinner: React.FC = () => {
+  return (
+    <div>
+      <span className="relative inset-0 inline-flex h-6 w-6 animate-spin items-center justify-center rounded-full border-2 border-base-300 after:absolute after:h-8 after:w-8 after:rounded-full after:border-2 after:border-x-transparent after:border-y-primary"></span>
+    </div>
+  );
+};
 export function GoogleIcon() {
   return (
-    <svg className="mr-2"
+    <svg
+      className="mr-2"
       xmlns="http://www.w3.org/2000/svg"
       height="24"
       viewBox="0 0 24 24"
@@ -71,7 +132,5 @@ export function GoogleIcon() {
       />
       <path d="M1 1h22v22H1z" fill="none" />
     </svg>
-  )
+  );
 }
-
-

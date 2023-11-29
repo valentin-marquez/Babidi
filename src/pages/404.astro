@@ -1,0 +1,32 @@
+---
+import MainLayout from "@layouts/MainLayout.astro";
+---
+
+<MainLayout navBar={false} footer={false}>
+  <div
+    class="flex min-h-screen flex-col justify-center bg-gray-100 py-12 sm:px-6 lg:px-8"
+  >
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2
+        class="mt-6 text-center font-sora text-3xl font-extrabold text-gray-900"
+      >
+        404 - Página no encontrada
+      </h2>
+      <p class="mt-2 text-center text-sm text-gray-600">
+        Lo sentimos, la página que estás buscando no existe.
+      </p>
+      <div
+        class="mt-5 flex justify-center sm:mt-8 sm:flex sm:justify-center lg:justify-center"
+      >
+        <div class="rounded-md shadow">
+          <button
+            onclick="handleClick()"
+            class="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 md:px-10 md:py-4 md:text-lg"
+          >
+            Regresar al inicio
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>

@@ -19,4 +19,10 @@
     "prettier.documentSelectors": [
         "**/*.{astro,html,js,json,md,mdx,svelte,ts,tsx,vue,yaml,yml}"
     ],
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

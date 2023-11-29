@@ -283,6 +283,8 @@ model users {
 model categories {
   category_id    Int              @id @default(autoincrement())
   name           String?          @db.VarChar(100)
+  slug           String?          @db.VarChar
+  posts          posts[]
   saved_searches saved_searches[]
 
   @@schema("public")
@@ -314,25 +316,32 @@ model messages {
 }
 
 model post_images {
-  image_id  Int    @id @default(autoincrement())
+  image_id  Int     @id @default(autoincrement())
   post_id   Int?
-  image_url String @db.VarChar(255)
-  posts     posts? @relation(fields: [post_id], references: [post_id], onDelete: Cascade, onUpdate: NoAction)
+  image_url String  @db.VarChar(255)
+  file_id   String? @db.VarChar(255)
+  posts     posts?  @relation(fields: [post_id], references: [post_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
 model posts {
-  post_id         Int               @id @default(autoincrement())
-  title           String            @db.VarChar(255)
-  description     String?
-  author_id       String?           @db.Uuid
-  status          String?           @db.VarChar(50)
-  created_at      DateTime          @db.Timestamp(6)
-  messages        messages[]
-  post_images     post_images[]
-  profiles        profiles?         @relation(fields: [author_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
-  ratings_reviews ratings_reviews[]
+  post_id           Int               @id @default(autoincrement())
+  title             String            @db.VarChar(255)
+  description       String?
+  author_id         String?           @db.Uuid
+  created_at        DateTime?         @default(now()) @db.Timestamp(6)
+  status            status_type?
+  category_id       Int?
+  emoji             String?           @db.VarChar(255)
+  busca_descripcion String?           @db.VarChar(100)
+  updated_at        DateTime?         @db.Timestamp(6)
+  slug              String?           @unique @db.VarChar(255)
+  messages          messages[]
+  post_images       post_images[]
+  categories        categories?       @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_category")
+  profiles          profiles?         @relation(fields: [author_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  ratings_reviews   ratings_reviews[]
 
   @@schema("public")
 }
@@ -405,9 +414,9 @@ model user_blocks {
 }
 
 model user_locations {
-  user_id  String                               @id @db.Uuid
-  geom     Unsupported("geometry(Point, 4326)")
-  profiles profiles                             @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  user_id  String                  @id @db.Uuid
+  geom     Unsupported("geometry")
+  profiles profiles                @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
@@ -439,4 +448,13 @@ enum factor_type {
   webauthn
 
   @@schema("auth")
+}
+
+enum status_type {
+  nuevo      @map("nuevo")
+  casi_usado @map("casi usado")
+  usado      @map("usado")
+  muy_usado  @map("muy usado")
+
+  @@schema("public")
 }
