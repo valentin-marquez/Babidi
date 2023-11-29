@@ -635,12 +635,10 @@ const PostButton: React.FC<PostButtonProps> = ({
             selectedImageIndex={selectedImageIndex}
             selectedImages={selectedImages}
             style={{
-              maxHeight: "898px",
-              maxWidth: "855px",
-              minHeight: "391px",
-              minWidth: "348px",
-              width: "432px",
-              height: "432px",
+              maxHeight: "100%",
+              maxWidth: "100%",
+              width: "100%",
+              height: "100%",
             }}
           >
             <img

@@ -48,7 +48,33 @@ import MainLayout from "@layouts/MainLayout.astro";
             )}; Path=/; Secure; SameSite=Strict; expires=${getCookieExpiration(
               expires_in,
             )};`;
-            window.location.href = "/home";
+
+            const user = await fetch("/api/user/getUser", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${access_token}`,
+              },
+            });
+
+            const auth = await user.json();
+            console.log(auth.user.id);
+
+            const res = await fetch("/api/user/isOnboarding", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${access_token}`,
+              },
+              body: JSON.stringify({ id: auth.user.id }),
+            });
+
+            const data = await res.json();
+            if (!data.status) {
+              window.location.href = "/home";
+            } else {
+              window.location.href = "/onboarding";
+            }
           }
         }
       } catch (e) {

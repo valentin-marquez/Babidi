@@ -66,10 +66,22 @@ function LoginForm() {
         const accessToken = auth.session.access_token;
         const expiresInSeconds = auth.session.expires_in;
         Cookies.set("sbat", accessToken, { expires: expiresInSeconds / 86400 });
-        if (auth.user.user_metadata.onboarding) {
-          window.location.href = "/home";
-        } else {
+
+        const res = await fetch("/api/user/isOnboarding", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${accessToken}`,
+          },
+          body: JSON.stringify({ id: auth.user.id }),
+        });
+
+        const data = await res.json();
+
+        if (data.isOnboarding) {
           window.location.href = "/onboarding";
+        } else {
+          window.location.href = "/home";
         }
       } else if (error) {
         setLoadingLogin(false);
