@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import CategoryCard from "@app/CategoryCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { MagicMotion } from "react-magic-motion";
 
 const CarouselItems = ({ categories }) => {
   const containerRef = useRef(null);
