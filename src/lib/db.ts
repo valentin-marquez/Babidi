@@ -156,6 +156,7 @@ export async function createPost(postData: {
     await prisma.$disconnect();
   }
 }
+
 interface Post {
   post_id: number;
   title: string;
@@ -172,6 +173,8 @@ interface Post {
   profile_picture: string | null;
   full_name: string;
   username: string;
+  category_name: string;
+  category_slug: string;
 }
 
 export const getPostBySlug = async (slug: string): Promise<Post | null> => {

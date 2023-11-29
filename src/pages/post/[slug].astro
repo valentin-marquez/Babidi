@@ -1,26 +1,77 @@
 ---
 import ImageGallery from "@app/ImageGallery";
+import Description from "@components/app/Description";
 import HomeLayout from "@layouts/HomeLayout.astro";
+import { MessageCircle } from "lucide-astro";
 const { slug } = Astro.params;
 
 import { getPostBySlug } from "@lib/db";
 const post = await getPostBySlug(slug);
-
+const initials = post.full_name
+  .split(" ")
+  .map((word) => word[0])
+  .join("")
+  .toLocaleLowerCase();
 if (!post) {
   return Astro.redirect("/404");
 }
 ---
 
 <HomeLayout>
-  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-    <div class="mt-4 rounded-lg p-6 shadow-md">
+  <div
+    class="mx-auto max-w-4xl rounded-2xl bg-base-200 px-4 font-sora sm:px-6 lg:px-8"
+  >
+    <div class="mt-4 rounded-lg p-6 font-sora shadow-md">
       <div class="flex flex-col sm:flex-row">
         <div class="sm:w-1/2">
-          <ImageGallery imageUrls={post.image_urls} />
+          <ImageGallery imageUrls={post.image_urls} client:load />
         </div>
-        <div class="sm:w-1/2 sm:pl-6">
-          <h1 class="mb-4 font-sora text-3xl font-bold">{post.title}</h1>
-          <p class="text-gray-700">{"titulo"}</p>
+        <div class="flex flex-col justify-between space-y-4 sm:w-1/2 sm:pl-6">
+          <div>
+            <div class="breadcrumbs font-sora text-sm">
+              <ul>
+                <li>Inicio</li>
+                <li>Categorias</li>
+                <li>
+                  <a class="link" href={`/categorias/${post.category_slug}`}>
+                    {post.category_name}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <h1 class="mb-4 font-syne text-3xl font-bold">{post.title}</h1>
+            <Description text={post.description} client:load />
+          </div>
+          <div class="flex flex-col gap-3 font-sora">
+            <div class="flex w-full flex-row items-center gap-4">
+              <a
+                href={`/u/${post.username.toLocaleLowerCase()}`}
+                class="btn btn-ghost flex flex-row text-start"
+              >
+                <div class="avatar placeholder">
+                  <div
+                    class="w-10 rounded-full bg-primary text-neutral-content"
+                  >
+                    <span class="text-sm">{initials}</span>
+                  </div>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-sm font-semibold capitalize text-current">
+                    {post.full_name}
+                  </span>
+                  <span class="text-xs font-semibold lowercase text-neutral">
+                    @{post.username}
+                  </span>
+                </div>
+              </a>
+            </div>
+            <button
+              class="btn btn-circle btn-primary btn-block justify-center font-syne"
+            >
+              Chatear
+              <MessageCircle class="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

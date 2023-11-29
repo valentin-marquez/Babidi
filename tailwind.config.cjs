@@ -8,6 +8,9 @@ module.exports = {
         syne: ["Syne", "sans-serif"],
         sora: ["Sora", "sans-serif"],
       },
+      scale: {
+        flip: '-1',
+      }
     },
   },
   daisyui: {
