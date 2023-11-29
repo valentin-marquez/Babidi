@@ -1,7 +1,7 @@
 import type { APIRoute, APIContext } from "astro";
 import { TokenVerification } from "@lib/decorators";
 import {
-  getPosts,
+  // getPosts,
   createPost,
   updatePost,
   deletePost,
@@ -9,27 +9,27 @@ import {
 } from "@lib/db";
 import { uploadImage } from "@lib/auth";
 
-export const GET: APIRoute = TokenVerification(
-  async ({ request }: APIContext) => {
-    try {
-      const posts = await getPosts();
-      return new Response(JSON.stringify(posts), {
-        status: 200,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-        status: 500,
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-    }
-  },
-);
+// export const GET: APIRoute = TokenVerification(
+//   async ({ request }: APIContext) => {
+//     try {
+//       const posts = await getPosts();
+//       return new Response(JSON.stringify(posts), {
+//         status: 200,
+//         headers: {
+//           "content-type": "application/json",
+//         },
+//       });
+//     } catch (error) {
+//       console.error("Error fetching posts:", error);
+//       return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+//         status: 500,
+//         headers: {
+//           "content-type": "application/json",
+//         },
+//       });
+//     }
+//   },
+// );
 
 export const POST: APIRoute = TokenVerification(
   async ({ request }: APIContext) => {
