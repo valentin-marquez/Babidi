@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
+import {
+  ChevronLeftCircle,
+  ChevronRightCircle,
+  Fullscreen,
+} from "lucide-react";
 import { Transition } from "@headlessui/react";
+import LightBox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 interface ImageGalleryProps {
   imageUrls: string[];
 }
+
 const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [startSlice, setStartSlice] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlePreviousClick = () => {
     setStartSlice((oldStartSlice) =>
@@ -21,6 +29,17 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
     );
   };
 
+  const handleImageClick = (index: number) => {
+    setSelectedImageIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const handleThumbnailClick = (index: number) => {
+    setSelectedImageIndex(index);
+  };
+
+
+
   return (
     <div className="flex w-full flex-col items-center">
       <Transition
@@ -29,7 +48,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
         enter="transition-opacity duration-200"
         enterFrom="opacity-0"
         enterTo="opacity-100"
-        className="mb-4 h-48 w-full rounded-3xl transition-all duration-500 ease-in-out sm:h-96"
+        className="relative mb-4 h-48 w-full rounded-3xl transition-all duration-500 ease-in-out sm:h-96"
       >
         <img
           style={{ borderRadius: "1.5rem" }}
@@ -37,6 +56,12 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
           src={imageUrls[selectedImageIndex]}
           alt={`Image ${selectedImageIndex + 1}`}
         />
+        <button
+          onClick={() => handleImageClick(selectedImageIndex)}
+          className="btn-primar btn btn-ghost absolute bottom-2 right-2 rounded-full text-neutral brightness-200 transition-all duration-200 ease-in-out"
+        >
+          <Fullscreen className="h-5 w-5" />
+        </button>
       </Transition>
       <div className="flex w-full items-center justify-between">
         <button
@@ -59,7 +84,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
               }`}
               src={url}
               alt={`Thumbnail ${index + startSlice + 1}`}
-              onClick={() => setSelectedImageIndex(index + startSlice)}
+              onClick={() => handleThumbnailClick(index + startSlice)}
               style={{ imageRendering: "pixelated" }}
             />
           ))}
@@ -76,6 +101,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
           <ChevronRightCircle className="h-8 w-8" />
         </button>
       </div>
+      <LightBox
+        open={isModalOpen}
+        close={() => setIsModalOpen(false)}
+        slides={imageUrls.map((url) => ({ src: url }))}
+      />
     </div>
   );
 };

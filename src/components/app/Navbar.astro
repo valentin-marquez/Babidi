@@ -1,10 +1,9 @@
 ---
 import SearchBox from "@app/SearchBox.astro";
 import PostButton from "@app/UploadButton";
-import { Logo } from "@components/Utils";
+import { Hamburger, Logo } from "@components/Utils";
 import { getUser } from "@lib/auth";
 import { getCategories, getProfileInfo, getStatusTypes } from "@lib/db";
-import { Menu, X } from "lucide-astro";
 
 const token = Astro.cookies.has("sbat")
   ? Astro.cookies.get("sbat").value
@@ -34,18 +33,7 @@ const statusTypes = await getStatusTypes();
 
 <div class="navbar z-10 bg-base-200">
   <div class="navbar-start">
-    {
-      profile && (
-        <div class="flex-none">
-          <label class="btn btn-square btn-ghost swap swap-rotate">
-            <input type="checkbox" id="toggleMenu" />
-            <Menu class="swap-off fill-current" id="showMenu" />
-
-            <X class="swap-on fill-current" id="closeMenu" />
-          </label>
-        </div>
-      )
-    }
+    {profile && <Hamburger client:load />}
     <div class="inline-flex flex-1 gap-3 lg:navbar-start">
       <Logo client:load />
     </div>
@@ -65,17 +53,17 @@ const statusTypes = await getStatusTypes();
       </div>
     ) : (
       <div class="navbar-end">
-        <div class="flex flex-row space-x-5">
+        <div class="flex flex-row items-center gap-2 sm:flex-row sm:space-x-4 sm:space-y-0">
           <a
             href="/login"
-            class="items-center font-sora transition-colors duration-200 hover:text-white lg:flex"
+            class="block items-center text-center font-sora text-sm transition-colors duration-200 hover:text-white sm:flex sm:text-base"
             data-astro-prefetch
           >
             Entrar
           </a>
           <a
             href="/signup"
-            class="rounded-full border-2 border-gray-600 p-3 font-sora transition-colors duration-200 hover:border-primary hover:text-white lg:flex"
+            class="block rounded-full border-2 border-gray-600 p-2 text-center font-sora text-sm transition-colors duration-200 hover:border-primary hover:text-white sm:flex sm:p-3 sm:text-base"
             data-astro-prefetch
           >
             Registrarse
@@ -85,3 +73,9 @@ const statusTypes = await getStatusTypes();
     )
   }
 </div>
+
+<style>
+  .navbar {
+    z-index: 1000;
+  }
+</style>

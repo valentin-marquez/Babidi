@@ -11,11 +11,11 @@ const Description = ({ text }) => {
   return (
     <div className="relative pb-4">
       <div
-        className="tooltip tooltip-bottom tooltip-primary w-full"
+        className="tooltip tooltip-bottom tooltip-primary h-full w-full"
         data-tip="Ver más información"
       >
         <p
-          className="btn btn-ghost line-clamp-[10] cursor-pointer whitespace-pre-line text-left font-normal text-current"
+          className="btn btn-ghost line-clamp-[10] h-full cursor-pointer whitespace-pre-line text-left font-normal text-current"
           onClick={toggleModal}
         >
           {text}

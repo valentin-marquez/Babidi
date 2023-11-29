@@ -1,27 +1,28 @@
-// ThemeSwitch.tsx
 import React, { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 const ThemeSwitch: React.FC = () => {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "darken";
-    }
-    return "darken";
-  });
+  const [theme, setTheme] = useState("darken");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      document.querySelector("html")?.setAttribute("data-theme", theme);
-      localStorage.setItem("theme", theme);
-      // Dispatch themeChange event
-      const event = new CustomEvent("themeChange", { detail: theme });
-      window.dispatchEvent(event);
+      const storedTheme = localStorage.getItem("theme");
+      if (storedTheme) {
+        setTheme(storedTheme);
+      }
     }
-  }, [theme]);
+  }, []);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "darken" ? "light" : "darken"));
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === "darken" ? "light" : "darken";
+      localStorage.setItem("theme", newTheme);
+      const themeChangeEvent = new CustomEvent("themeChange", {
+        detail: newTheme,
+      });
+      window.dispatchEvent(themeChangeEvent);
+      return newTheme;
+    });
   };
 
   return (

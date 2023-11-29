@@ -22,5 +22,7 @@ const categories = await getCategories();
 ---
 
 <HomeLayout>
-  <CarouselItems categories={categories} client:load />
+  <div class="mx-auto">
+    <CarouselItems categories={categories} client:load />
+  </div>
 </HomeLayout>

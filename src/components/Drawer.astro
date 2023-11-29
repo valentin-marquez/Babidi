@@ -17,13 +17,14 @@ if (token) {
 
   profile = {
     id: user.id,
-    username: user.username,
+    username: user.username.toLowerCase(),
     full_name: user.full_name,
     status: user.status,
     initials: user.full_name
       .split(" ")
       .map((n) => n[0])
-      .join(""),
+      .join("")
+      .toLocaleLowerCase(),
   };
 }
 
@@ -36,20 +37,20 @@ if (profile) {
 {
   profile ? (
     <div class="drawer" id="drawer">
-      <input type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content flex transform flex-col transition-transform duration-300 ease-in-out">
-        <main class="container mx-auto w-full sm:w-3/4 lg:w-11/12">
+      <input type="checkbox" class="drawer-toggle" id="sidebar" />
+      <div class="drawer-content flex flex-col transition-transform duration-300 ease-in-out">
+        <main class="mx-auto w-4/5">
           <slot />
         </main>
       </div>
       <div class="drawer-side">
         <label
-          for="my-drawer-3"
+          for="sidebar"
           aria-label="close sidebar"
           class="drawer-overlay"
         />
-        <ul class="w-25 menu min-h-full overflow-y-auto border-opacity-50 bg-base-200 font-sora text-base-content shadow-lg">
-          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne">
+        <ul class="menu min-h-full w-80 overflow-y-auto border-opacity-50 bg-base-200 p-4 font-sora text-base-content shadow-lg">
+          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg text-blue-500">
             General
           </h2>
           <div class="active-primary">
@@ -79,7 +80,7 @@ if (profile) {
             </li>
           </div>
           <div class="divider" />
-          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne">
+          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg text-current brightness-150">
             Cuenta
           </h2>
           <li>
@@ -98,19 +99,23 @@ if (profile) {
             <ThemeSwitch client:load />
           </li>
           <div class="divider" />
-          <li>
-            <div class="avatar placeholder">
-              <div class="w-10 rounded-full bg-neutral text-neutral-content">
-                <span class="text-sm">{profile.initials}</span>
-              </div>
-              <span>
-                <div class="flex flex-col">
-                  <p class="capitalize">{profile.full_name}</p>
-                  <p class="capitalize">@{profile.username}</p>
+          <div class="h-full">
+            <li>
+              <div class="avatar placeholder">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full  bg-primary">
+                  <span class="text-sm">{profile.initials}</span>
                 </div>
-              </span>
-            </div>
-          </li>
+                <span>
+                  <div class="flex flex-col">
+                    <p class="capitalize text-current brightness-200">
+                      {profile.full_name}
+                    </p>
+                    <p class="capitalize text-neutral">@{profile.username}</p>
+                  </div>
+                </span>
+              </div>
+            </li>
+          </div>
         </ul>
       </div>
     </div>
@@ -122,6 +127,12 @@ if (profile) {
     </div>
   )
 }
+
+<style>
+  .drawer-side {
+    top: 60px;
+  }
+</style>
 
 <script is:inline define:vars={{ activeJs }}>
   function setupDrawer(activeJs) {

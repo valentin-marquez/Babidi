@@ -28,47 +28,23 @@
       </ul>
     </div>
     <div class="navbar-end">
-      <div class="flex flex-row space-x-5">
+      <div
+        class="flex flex-row items-center gap-2 sm:flex-row sm:space-x-4 sm:space-y-0"
+      >
         <a
           href="/login"
-          class="hidden items-center font-sora transition-colors duration-200 hover:text-white lg:flex"
-          data-astro-prefetch>Entrar</a
+          class="block items-center text-center font-sora text-sm transition-colors duration-200 hover:text-white sm:flex sm:text-base"
+          data-astro-prefetch
         >
+          Entrar
+        </a>
         <a
           href="/signup"
-          class="hidden rounded-full border-2 border-gray-600 p-3 font-sora transition-colors duration-200 hover:border-primary hover:text-white lg:flex"
-          data-astro-prefetch>Registrarse</a
+          class="block rounded-full border-2 border-gray-600 p-2 text-center font-sora text-sm transition-colors duration-200 hover:border-primary hover:text-white sm:flex sm:p-3 sm:text-base"
+          data-astro-prefetch
         >
-      </div>
-      <div class="dropdown">
-        <label tabindex="0" class="btn btn-ghost lg:hidden">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h8m-8 6h16"></path></svg
-          >
-        </label>
-        <ul
-          tabindex="0"
-          class="menu dropdown-content rounded-box menu-sm z-[1] mt-3 w-52 bg-base-100 p-2 shadow"
-        >
-          <li><a>Item 1</a></li>
-          <li>
-            <a>Parent</a>
-            <ul class="p-2">
-              <li><a>Submenu 1</a></li>
-              <li><a>Submenu 2</a></li>
-            </ul>
-          </li>
-          <li><a>Item 3</a></li>
-        </ul>
+          Registrarse
+        </a>
       </div>
     </div>
   </div>

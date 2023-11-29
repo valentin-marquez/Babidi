@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { Transition } from "@headlessui/react";
 
 export function Logo() {
-  // check if localStorage is available
   const isLocalStorageAvailable = typeof localStorage !== "undefined";
-
-  // check localstorage for theme if it exists, if not set it to darken
-  const [theme, setTheme] = useState(
-    isLocalStorageAvailable
-      ? localStorage.getItem("theme") || "darken"
-      : "darken",
-  );
+  const [theme, setTheme] = useState("darken");
 
   const themes = {
     darken: "/images/logo/logo-dark.svg",
     light: "/images/logo/logo-light.svg",
   };
 
-  // set the theme in localstorage
+  useEffect(() => {
+    if (isLocalStorageAvailable) {
+      const storedTheme = localStorage.getItem("theme");
+      setTheme(storedTheme || "darken");
+    }
+  }, [isLocalStorageAvailable]);
+
   useEffect(() => {
     if (isLocalStorageAvailable) {
       localStorage.setItem("theme", theme);
+      // Emitir el evento "themeChange" después de actualizar el tema
+      const themeChangeEvent = new CustomEvent("themeChange", {
+        detail: theme,
+      });
+      window.dispatchEvent(themeChangeEvent);
     }
   }, [theme, isLocalStorageAvailable]);
 
-  // listen for theme changes
   useEffect(() => {
     const handleThemeChange = (event: CustomEvent) => {
       setTheme(event.detail);
@@ -31,19 +36,17 @@ export function Logo() {
 
     window.addEventListener("themeChange", handleThemeChange);
 
-    // cleanup function
     return () => {
       window.removeEventListener("themeChange", handleThemeChange);
     };
   }, []);
 
   return (
-    <a href="/" className="btn btn-ghost text-xl">
+    <a href="/" className="btn btn-ghost text-base sm:text-xl">
       <img
         src={themes[theme]}
         alt="Babidi"
-        width="190"
-        height="40"
+        className="h-auto w-24 sm:h-auto sm:w-48"
         decoding="async"
       />
     </a>
@@ -90,7 +93,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
         ¡Objeto Publicado!
       </h2>
       <a href={`${location.origin}/post/${slug}`}>
-        <h2 className=" link-primary link cursor-pointer font-sora text-xl no-underline">
+        <h2 className=" link link-primary cursor-pointer font-sora text-xl no-underline">
           Ver publicación!
         </h2>
       </a>
@@ -134,3 +137,44 @@ export function GoogleIcon() {
     </svg>
   );
 }
+
+export const Hamburger: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <div className="flex-none" onClick={toggleMenu}>
+      <label className="btn btn-square btn-ghost" htmlFor="sidebar">
+        <div className="swap swap-rotate">
+          <input type="checkbox" id="toggleMenu" />
+          <Transition
+            show={!isOpen}
+            enter="transition ease-out duration-100 transform"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="transition ease-in duration-75 transform"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <Menu className=" h-6 w-6 fill-current" id="showMenu" />
+          </Transition>
+
+          <Transition
+            show={isOpen}
+            enter="transition ease-out duration-100 transform"
+            enterFrom="opacity-0 scale-95"
+            enterTo="opacity-100 scale-100"
+            leave="transition ease-in duration-75 transform"
+            leaveFrom="opacity-100 scale-100"
+            leaveTo="opacity-0 scale-95"
+          >
+            <X className=" h-6 w-6 fill-current" id="closeMenu" />
+          </Transition>
+        </div>
+      </label>
+    </div>
+  );
+};
