@@ -92,7 +92,7 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
       <h2 className="font-syne text-2xl font-bold text-current">
         ¡Objeto Publicado!
       </h2>
-      <a href={`${location.origin}/post/${slug}`}>
+      <a href={`/post/${slug}`}  target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2">
         <h2 className=" link link-primary cursor-pointer font-sora text-xl no-underline">
           Ver publicación!
         </h2>

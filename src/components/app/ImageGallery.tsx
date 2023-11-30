@@ -38,8 +38,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
     setSelectedImageIndex(index);
   };
 
-
-
   return (
     <div className="flex w-full flex-col items-center">
       <Transition
@@ -104,7 +102,15 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
       <LightBox
         open={isModalOpen}
         close={() => setIsModalOpen(false)}
-        slides={imageUrls.map((url) => ({ src: url }))}
+        slides={[
+          { src: imageUrls[selectedImageIndex] },
+          ...imageUrls
+            .slice(0, selectedImageIndex)
+            .map((url) => ({ src: url })),
+          ...imageUrls
+            .slice(selectedImageIndex + 1)
+            .map((url) => ({ src: url })),
+        ]}
       />
     </div>
   );

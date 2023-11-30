@@ -41,6 +41,7 @@ module.exports = {
           active: "#794cff",
           "text-white": "#fbfcfc",
           "high-primary": "#7f00ff",
+          "text-current": "#fff",
         },
 
       },

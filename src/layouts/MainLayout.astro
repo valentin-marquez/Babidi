@@ -1,7 +1,7 @@
 ---
 import Footer from "@components/Footer.astro";
 import NavBar from "@components/NavBar.astro";
-import { ViewTransitions } from "astro:transitions";
+
 import "src/global.css";
 interface Props {
   navBar?: boolean;
@@ -19,7 +19,6 @@ const { navBar = true, footer = true } = Astro.props;
     <link id="favicon" rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="mask-icon" href="/favicon/favicon.svg" color="#8D46E7" />
     <title>Babidi</title>
-    <ViewTransitions />
   </head>
   <body>
     <div class="flex min-h-screen flex-col overflow-x-hidden">

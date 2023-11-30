@@ -1,5 +1,11 @@
 ---
+import { isLoggedIn } from "@lib/auth";
 
+var isLogged = false;
+
+if (Astro.cookies.has("sbat")) {
+  isLogged = await isLoggedIn(Astro.cookies.get("sbat").value);
+}
 ---
 
 <div
@@ -31,20 +37,34 @@
       <div
         class="flex flex-row items-center gap-2 sm:flex-row sm:space-x-4 sm:space-y-0"
       >
-        <a
-          href="/login"
-          class="block items-center text-center font-sora text-sm transition-colors duration-200 hover:text-white sm:flex sm:text-base"
-          data-astro-prefetch
-        >
-          Entrar
-        </a>
-        <a
-          href="/signup"
-          class="block rounded-full border-2 border-gray-600 p-2 text-center font-sora text-sm transition-colors duration-200 hover:border-primary hover:text-white sm:flex sm:p-3 sm:text-base"
-          data-astro-prefetch
-        >
-          Registrarse
-        </a>
+        {
+          isLogged ? (
+            <a
+              href="/home"
+              class="block items-center text-center font-sora text-sm transition-colors duration-200 hover:text-white sm:flex sm:text-base"
+              data-astro-prefetch
+            >
+              Entrar
+            </a>
+          ) : (
+            <>
+              <a
+                href="/login"
+                class="block items-center text-center font-sora text-sm transition-colors duration-200 hover:text-white sm:flex sm:text-base"
+                data-astro-prefetch
+              >
+                Entrar
+              </a>
+              <a
+                href="/signup"
+                class="block rounded-full border-2 border-gray-600 p-2 text-center font-sora text-sm transition-colors duration-200 hover:border-primary hover:text-white sm:flex sm:p-3 sm:text-base"
+                data-astro-prefetch
+              >
+                Registrarse
+              </a>
+            </>
+          )
+        }
       </div>
     </div>
   </div>

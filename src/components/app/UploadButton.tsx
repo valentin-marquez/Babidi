@@ -1,19 +1,14 @@
 import {
-  MapPin,
   ImagePlus,
   ChevronLeft,
   ChevronRight,
   X,
-  Files,
-  Check,
-  ChevronsDownUp,
   HelpCircle,
 } from "lucide-react";
-import React, { Fragment, useState, useEffect } from "react";
-import { Transition, Dialog, Listbox } from "@headlessui/react";
+import React, { Fragment, useState } from "react";
+import { Transition, Dialog } from "@headlessui/react";
 import { useDropzone } from "react-dropzone";
 import Cookies from "js-cookie";
-import { supabase } from "@lib/supabase-client";
 import { DoubleSpinner, CompletionAnimation } from "@components/Utils";
 
 // @ts-ignore
@@ -157,6 +152,7 @@ interface ImageContainerProps {
   image: string;
   onPrev: () => void;
   onNext: () => void;
+  onAdd: () => void;
   className?: string;
   children?: React.ReactNode;
   selectedImageIndex: number;
@@ -170,6 +166,7 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
   onNext,
   className,
   children,
+  onAdd,
   style,
   selectedImageIndex,
   selectedImages,
@@ -181,8 +178,14 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
     <img
       src={image}
       alt="Selected"
-      className="h-full w-full transform object-cover object-center transition-all duration-300"
+      className="h-full w-full transform select-none object-cover object-center transition-all duration-300"
     />
+    <button
+      className={` btn btn-circle glass btn-ghost btn-sm absolute bottom-0 right-0 m-3 mb-14 h-10 w-10 transform transition-all duration-300 hover:scale-110`}
+      onClick={onAdd} // Llama a onAdd cuando se hace clic
+    >
+      <ImagePlus className="inline-block h-6 w-6 stroke-neutral-content text-neutral-content brightness-150" />
+    </button>
     <div className="navigation absolute bottom-0 left-0 right-0 flex justify-between bg-black bg-opacity-50 p-2">
       <button
         className={`btn-ghosts btn btn-sm transform transition-all duration-300 hover:scale-110 ${
@@ -574,20 +577,45 @@ const PostButton: React.FC<PostButtonProps> = ({
   };
 
   const handleDrop = (acceptedFiles: File[]) => {
-    setSelectedImages(
-      acceptedFiles.slice(0, 10).map((file) =>
+    setSelectedImages((prevImages) => [
+      ...prevImages,
+      ...acceptedFiles.slice(0, 10).map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         }),
       ),
-    );
+    ]);
     setStep(1); // Move to the next step after images are uploaded
   };
 
   const handlePrev = () => setSelectedImageIndex((prevIndex) => prevIndex - 1);
   const handleNext = () => setSelectedImageIndex((prevIndex) => prevIndex + 1);
   const handleNextButton = () => setStep(2);
-  const handleBack = () => setStep(step - 1);
+  const handleBack = () => {
+    if (step === 1) {
+      resetModal();
+    } else {
+      setStep(step - 1);
+    }
+  };
+  const handleAddImages = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = true;
+    input.accept = "image/*";
+    input.onchange = (event) => {
+      const files = Array.from(event.target.files);
+      setSelectedImages((prevImages) => [
+        ...prevImages,
+        ...files.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        ),
+      ]);
+    };
+    input.click();
+  };
 
   return (
     <div>
@@ -627,22 +655,23 @@ const PostButton: React.FC<PostButtonProps> = ({
         )}
         {step === 1 && (
           <ImageContainer
-            // @ts-ignore
             image={selectedImages[selectedImageIndex]?.preview}
             onPrev={handlePrev}
             onNext={handleNext}
+            onAdd={handleAddImages}
             className="image-container cursor-none select-none"
             selectedImageIndex={selectedImageIndex}
             selectedImages={selectedImages}
             style={{
-              maxHeight: "100%",
-              maxWidth: "100%",
-              width: "100%",
-              height: "100%",
+              maxHeight: "898px",
+              maxWidth: "855px",
+              minHeight: "391px",
+              minWidth: "348px",
+              width: "432px",
+              height: "432px",
             }}
           >
             <img
-              // @ts-ignore
               src={selectedImages[selectedImageIndex]?.preview}
               alt={`Selected ${selectedImageIndex + 1}`}
               className="h-full w-full object-cover"

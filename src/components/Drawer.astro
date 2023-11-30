@@ -3,7 +3,14 @@
 import ThemeSwitch from "@components/ThemeSwitch";
 import { getUser } from "@lib/auth";
 import { getProfileInfo } from "@lib/db";
-import { ChevronRight, LogOut, Settings } from "lucide-astro";
+import {
+  Boxes,
+  LayoutGrid,
+  LogOut,
+  MessageCircle,
+  Package,
+  Settings,
+} from "lucide-astro";
 
 const token = Astro.cookies.has("sbat")
   ? Astro.cookies.get("sbat").value
@@ -32,11 +39,13 @@ let activeJs = false;
 if (profile) {
   activeJs = true;
 }
+
+let activePath = Astro.url.pathname;
 ---
 
 {
   profile ? (
-    <div class="drawer" id="drawer">
+    <div class="drawer " id="drawer">
       <input type="checkbox" class="drawer-toggle" id="sidebar" />
       <div class="drawer-content flex flex-col transition-transform duration-300 ease-in-out">
         <main class="mx-auto w-4/5">
@@ -49,38 +58,113 @@ if (profile) {
           aria-label="close sidebar"
           class="drawer-overlay"
         />
-        <ul class="menu min-h-full w-80 overflow-y-auto border-opacity-50 bg-base-200 p-4 font-sora text-base-content shadow-lg">
-          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg text-blue-500">
+        <ul class="menu min-h-full w-72 overflow-y-auto border-opacity-50 bg-base-200 p-4 font-sora text-base-content shadow-lg">
+          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg ">
             General
           </h2>
-          <div class="active-primary">
-            <li>
-              <a href="/home">
-                <ChevronRight />
-                <span>Inicio</span>
+          <div>
+            <li class="group">
+              <a
+                href="/home"
+                class={`${
+                  activePath === "/home"
+                    ? "btn btn-disabled disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
+                    : "btn btn-primary btn-md btn-wide m-0 items-center justify-start"
+                }`}
+              >
+                <LayoutGrid
+                  class={
+                    activePath === "/home"
+                      ? ""
+                      : "transition-colors group-hover:stroke-primary"
+                  }
+                />
+                <span
+                  class={
+                    activePath === "/home" ? "" : "group-hover:brightness-125"
+                  }
+                >
+                  Inicio
+                </span>
               </a>
             </li>
-            <li>
-              <a href="/explore">
-                <ChevronRight />
-                <span>Explorar Intercambios</span>
+            <li class="group">
+              <a
+                href="/explorar"
+                class={`${
+                  activePath === "/explorar"
+                    ? "btn btn-disabled disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
+                    : "btn btn-md btn-wide m-0 items-center justify-start"
+                }`}
+              >
+                <Boxes
+                  class="transition-colors group-hover:stroke-primary"
+                  class={
+                    activePath === "/explorar"
+                      ? ""
+                      : "transition-colors group-hover:stroke-primary"
+                  }
+                />
+                <span
+                  class={`${
+                    activePath === "/explorar"
+                      ? ""
+                      : "group-hover:brightness-125"
+                  }`}
+                >
+                  Explorar Intercambios
+                </span>
               </a>
             </li>
-            <li>
-              <a href="/exchanges">
-                <ChevronRight />
-                <span>Mis Articulos</span>
+            <li class="group">
+              <a
+                href={`/u/${profile.username}`}
+                class={`${
+                  activePath === `/u/${profile.username}`
+                    ? "btn btn-disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
+                    : "btn btn-md btn-wide m-0 items-center justify-start"
+                }`}
+              >
+                <Package
+                  class={`${
+                    activePath === `/u/${profile.username}`
+                      ? ""
+                      : "transition-colors group-hover:stroke-primary"
+                  }`}
+                />
+                <span
+                  class={`${
+                    activePath === `/u/${profile.username}`
+                      ? ""
+                      : "group-hover:brightness-125"
+                  }`}
+                >
+                  Mis Articulos
+                </span>
               </a>
             </li>
-            <li>
-              <a>
-                <ChevronRight />
-                Mensajes
+            <li class="group">
+              <a
+                href="/chats"
+                class={`${
+                  activePath === "/chats"
+                    ? "btn btn-disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
+                    : "btn btn-md btn-wide m-0 items-center justify-start"
+                }`}
+              >
+                <MessageCircle
+                  class={
+                    activePath === "/chats"
+                      ? ""
+                      : "transition-colors group-hover:stroke-primary"
+                  }
+                />
+                <span class="group-hover:brightness-125">Mensajes</span>
               </a>
             </li>
           </div>
           <div class="divider" />
-          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg text-current brightness-150">
+          <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg ">
             Cuenta
           </h2>
           <li>
@@ -144,30 +228,9 @@ if (profile) {
       drawer.classList.toggle("drawer-open", status);
     }
 
-    function setActiveLink() {
-      const currentPath = window.location.pathname;
-      const links = document.querySelectorAll(".menu a");
-
-      links.forEach((link) => {
-        const linkPath = link.getAttribute("href");
-
-        if (linkPath && currentPath.includes(linkPath)) {
-          link.classList.add("active");
-        } else {
-          link.classList.remove("active");
-        }
-      });
-    }
-
-    // Agrega la clase 'active' al cargar la página
-    setActiveLink();
-
     checkbox.addEventListener("change", function (e) {
       toggleSidebar(e.target.checked);
     });
-
-    // Actualiza la clase 'active' al cambiar la ruta
-    window.addEventListener("popstate", setActiveLink);
   }
 
   document.addEventListener("DOMContentLoaded", function () {

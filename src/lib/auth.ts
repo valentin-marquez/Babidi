@@ -165,3 +165,13 @@ export async function uploadImage(
   const publicURL = storage.getPublicUrl(`${file_id}`).data.publicUrl;
   return { url: publicURL, file_id: data.path };
 }
+
+export async function isLoggedIn(sbat: string): Promise<boolean> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser(sbat);
+
+  if (!user || user.role !== "authenticated") return false;
+
+  return true;
+}

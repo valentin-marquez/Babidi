@@ -9,7 +9,7 @@ export default defineConfig({
     experimentalReactChildren: true
   })],
   prefetch: {
-    prefetchAll: true
+    defaultStrategy: 'viewport'
   },
   output: "server",
   adapter: vercel({
