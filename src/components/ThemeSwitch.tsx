@@ -24,21 +24,29 @@ const ThemeSwitch: React.FC = () => {
       return newTheme;
     });
   };
-
   return (
-    <label className="flex cursor-pointer gap-2">
-      <Moon />
-      <input
-        type="checkbox"
-        className="theme-controller toggle"
-        value={theme}
-        id="themeToggle"
-        checked={theme === "light"}
-        onChange={toggleTheme}
-      />
-      <Sun />
-    </label>
+    <li className="group">
+      <label className="flex cursor-pointer gap-2 ">
+        <Moon
+          className={`transition-all ${
+            theme === "darken" ? "group-hover:stroke-primary" : ""
+          }`}
+        />
+        <input
+          type="checkbox"
+          className="theme-controller toggle"
+          value={theme}
+          id="themeToggle"
+          checked={theme === "light"}
+          onChange={toggleTheme}
+        />
+        <Sun
+          className={`transition-all ${
+            theme === "light" ? "group-hover:stroke-primary" : ""
+          }`}
+        />
+      </label>
+    </li>
   );
 };
-
 export default ThemeSwitch;

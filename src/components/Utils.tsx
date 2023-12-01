@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { Transition } from "@headlessui/react";
+import Cookies from "js-cookie";
+import { signOut } from "@lib/auth";
 
 export function Logo() {
   const isLocalStorageAvailable = typeof localStorage !== "undefined";
@@ -92,7 +94,12 @@ export const CompletionAnimation: React.FC<CompletionAnimationProps> = ({
       <h2 className="font-syne text-2xl font-bold text-current">
         ¡Objeto Publicado!
       </h2>
-      <a href={`/post/${slug}`}  target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2">
+      <a
+        href={`/post/${slug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center space-x-2"
+      >
         <h2 className=" link link-primary cursor-pointer font-sora text-xl no-underline">
           Ver publicación!
         </h2>
@@ -176,5 +183,29 @@ export const Hamburger: React.FC = () => {
         </div>
       </label>
     </div>
+  );
+};
+
+export const SignOut: React.FC = () => {
+  const deleteAllCookies = () => {
+    const cookies = Cookies.get();
+    for (const cookie in cookies) {
+      Cookies.remove(cookie);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    deleteAllCookies();
+    window.location.href = "/";
+  };
+
+  return (
+    <li onClick={handleSignOut} className="group">
+      <a className="btn btn-md btn-wide m-0 items-center justify-start font-normal group-hover:font-semibold">
+        <LogOut className="transition-colors group-hover:stroke-primary" />
+        <span className="group-hover:brightness-125">Cerrar Sesión</span>
+      </a>
+    </li>
   );
 };

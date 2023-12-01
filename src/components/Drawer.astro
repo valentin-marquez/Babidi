@@ -1,12 +1,12 @@
 ---
 // import ThemeSwitch from "@components/ThemeSwitch.astro";
 import ThemeSwitch from "@components/ThemeSwitch";
+import { SignOut } from "@components/Utils";
 import { getUser } from "@lib/auth";
 import { getProfileInfo } from "@lib/db";
 import {
   Boxes,
   LayoutGrid,
-  LogOut,
   MessageCircle,
   Package,
   Settings,
@@ -62,14 +62,14 @@ let activePath = Astro.url.pathname;
           <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg ">
             General
           </h2>
-          <div>
+          <div class="space-y-1">
             <li class="group">
               <a
                 href="/home"
                 class={`${
                   activePath === "/home"
-                    ? "btn btn-disabled disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
-                    : "btn btn-primary btn-md btn-wide m-0 items-center justify-start"
+                    ? "btn btn-disabled disabled btn-primary  btn-wide m-0 items-center justify-start"
+                    : "btn btn-primary  btn-wide m-0 items-center justify-start font-normal group-hover:font-semibold"
                 }`}
               >
                 <LayoutGrid
@@ -93,8 +93,8 @@ let activePath = Astro.url.pathname;
                 href="/explorar"
                 class={`${
                   activePath === "/explorar"
-                    ? "btn btn-disabled disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
-                    : "btn btn-md btn-wide m-0 items-center justify-start"
+                    ? "btn btn-disabled disabled btn-primary  btn-wide m-0 items-center justify-start"
+                    : "btn  btn-wide m-0 items-center justify-start font-normal group-hover:font-semibold"
                 }`}
               >
                 <Boxes
@@ -121,8 +121,8 @@ let activePath = Astro.url.pathname;
                 href={`/u/${profile.username}`}
                 class={`${
                   activePath === `/u/${profile.username}`
-                    ? "btn btn-disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
-                    : "btn btn-md btn-wide m-0 items-center justify-start"
+                    ? "btn btn-disabled btn-primary  btn-wide m-0 items-center justify-start"
+                    : "btn  btn-wide m-0 items-center justify-start font-normal group-hover:font-semibold"
                 }`}
               >
                 <Package
@@ -148,18 +148,20 @@ let activePath = Astro.url.pathname;
                 href="/chats"
                 class={`${
                   activePath === "/chats"
-                    ? "btn btn-disabled btn-primary btn-md btn-wide m-0 items-center justify-start"
-                    : "btn btn-md btn-wide m-0 items-center justify-start"
+                    ? "btn btn-disabled btn-primary  btn-wide m-0 items-center justify-start"
+                    : "btn  btn-wide m-0 items-center justify-start font-normal group-hover:font-semibold"
                 }`}
               >
                 <MessageCircle
                   class={
                     activePath === "/chats"
                       ? ""
-                      : "transition-colors group-hover:stroke-primary"
+                      : "transition-all group-hover:stroke-primary"
                   }
                 />
-                <span class="group-hover:brightness-125">Mensajes</span>
+                <span class="transition-all group-hover:brightness-125">
+                  Mensajes
+                </span>
               </a>
             </li>
           </div>
@@ -167,26 +169,21 @@ let activePath = Astro.url.pathname;
           <h2 class="menu-title flex items-center gap-4 px-1.5 font-syne text-lg ">
             Cuenta
           </h2>
-          <li>
-            <a>
-              <Settings className="font-normal" />
-              Configuración
+          <ThemeSwitch client:load />
+          <li class="group">
+            <a class="btn  btn-wide m-0 items-center justify-start font-normal transition-colors group-hover:font-semibold">
+              <Settings className="transition-all group-hover:stroke-primary" />
+              <span class="transition-all group-hover:brightness-125">
+                Configuración
+              </span>
             </a>
           </li>
-          <li>
-            <a>
-              <LogOut className="font-normal" />
-              Cerrar Sesión
-            </a>
-          </li>
-          <li>
-            <ThemeSwitch client:load />
-          </li>
+          <SignOut client:load />
           <div class="divider" />
           <div class="h-full">
             <li>
               <div class="avatar placeholder">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full  bg-primary">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full  bg-primary text-white">
                   <span class="text-sm">{profile.initials}</span>
                 </div>
                 <span>
