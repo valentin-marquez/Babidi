@@ -1,0 +1,193 @@
+---
+import EditProfile from "@components/app/EditProfile";
+import HomeLayout from "@layouts/HomeLayout.astro";
+import { isSameUser } from "@lib/auth";
+import { getUserProfile, getUserProfilePosts } from "@lib/db";
+import { MoreHorizontal, UserCog, X } from "lucide-astro";
+
+const { username } = Astro.params;
+
+const UserProfile = await getUserProfile(username);
+if (!UserProfile) {
+  return Astro.redirect("/404", 404);
+}
+const UserPosts = await getUserProfilePosts(username);
+// check if the actual user is the same as the profile user
+const isSame = Astro.cookies.has("sbat")
+  ? await isSameUser(Astro.cookies.get("sbat")?.value, UserProfile.user_id)
+  : false;
+
+const editPost = () => {
+  console.log("edit post");
+};
+---
+
+<HomeLayout>
+  <!-- user info section -->
+  <div class="mx-auto w-full sm:w-4/5">
+    <!-- modal for the update profile -->
+    <dialog id="edit" class="modal">
+      <div class="modal-box">
+        <form method="dialog">
+          <button
+            class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2"
+          >
+            <X />
+          </button>
+        </form>
+        <EditProfile
+          client:load
+          user={UserProfile}
+          action="/api/user/update"
+          method="POST"
+          cookie={Astro.cookies.get("sbat")?.value}
+        />
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </div>
+    </dialog>
+    <section class="m-4 rounded-2xl bg-base-200 p-4">
+      <div
+        class="relative mx-auto flex flex-col items-center justify-center rounded-lg p-6 lg:flex-row lg:items-center lg:justify-center lg:p-8"
+      >
+        {
+          isSame && (
+            <div class="absolute right-2 top-2 hidden items-center space-x-1 lg:flex">
+              <details class="dropdown dropdown-left">
+                <summary class="btn btn-circle btn-xs ">
+                  <MoreHorizontal class="h-4 w-4" />
+                </summary>
+                <ul class="menu dropdown-content z-10 w-52 rounded-box bg-base-100 p-2 shadow">
+                  <li>
+                    <a onclick="edit.showModal()"> Editar</a>
+                  </li>
+                </ul>
+              </details>
+            </div>
+          )
+        }
+        <div class="flex flex-col items-center lg:w-1/2 lg:items-start">
+          <div class="flex flex-col items-center">
+            <div class="avatar placeholder mb-4">
+              <div
+                class="h-24 w-24 rounded-full bg-primary text-neutral-content ring ring-primary ring-offset-2 ring-offset-base-100 lg:h-32 lg:w-32"
+              >
+                {
+                  !UserProfile.avatar ? (
+                    <span class="select-none text-2xl text-white">
+                      {UserProfile.full_name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toLocaleUpperCase()}
+                    </span>
+                  ) : (
+                    <img src={UserProfile.avatar} alt="avatar" />
+                  )
+                }
+              </div>
+            </div>
+            <h1
+              class="mb-1 text-2xl font-bold capitalize text-current brightness-150"
+            >
+              {UserProfile.full_name}
+            </h1>
+            <p class="mb-3 text-current">@{UserProfile.username}</p>
+          </div>
+        </div>
+        <div
+          class="divider divider-neutral divider-vertical lg:divider-horizontal"
+        >
+        </div>
+        <div class="flex w-full flex-col items-center">
+          <p class="mb-6 mt-2 text-gray-400" style="text-wrap: balance;">
+            {
+              UserProfile.bio
+                ? UserProfile.bio
+                : "Este usuario no tiene una biografía"
+            }
+          </p>
+        </div>
+        <div class="mt-4 md:hidden lg:mt-0">
+          {
+            isSame && (
+              <button
+                class="btn btn-square btn-primary btn-wide text-sm font-medium capitalize md:px-4 md:py-2"
+                onclick="edit.showModal();"
+              >
+                <UserCog class="mr-2 h-5 w-5" />
+                Editar perfil
+              </button>
+            )
+          }
+        </div>
+      </div>
+    </section>
+    <!-- seccion de publicaciones -->
+    <section class="m-4 rounded-2xl bg-base-300 p-4">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {
+          UserPosts ? (
+            UserPosts.map((post) => (
+              <div
+                class="bg-card text-card-foreground w-full rounded-3xl border border-base-300 bg-base-200 shadow-sm"
+                data-v0-t="card"
+              >
+                <div class="p-4">
+                  <div class="relative rounded-3xl">
+                    <img
+                      src={post.image_urls.split(",")[0]}
+                      alt="Abstract Art"
+                      class="h-auto w-full rounded-3xl"
+                      width="260"
+                      height="260"
+                      style="aspect-ratio: 260 / 260; object-fit: cover;"
+                    />
+                    {isSame && (
+                      <div class="absolute right-2 top-2 flex items-center space-x-1">
+                        <details class="dropdown dropdown-left">
+                          <summary class="btn btn-circle btn-xs ">
+                            <MoreHorizontal class="h-4 w-4" />
+                          </summary>
+                          <ul class="menu dropdown-content z-10 w-52 rounded-box bg-base-100 p-2 shadow">
+                            <li>
+                              <a> Editar</a>
+                              <a> Eliminar</a>
+                            </li>
+                          </ul>
+                        </details>
+                      </div>
+                    )}
+                  </div>
+                  <div class="mt-4">
+                    <a href={`/post/${post.slug}`}>
+                      <h3 class="h-6 overflow-hidden overflow-ellipsis text-lg font-semibold">
+                        {post.title}
+                      </h3>
+                    </a>
+                    <div class="mt-2">
+                      <span class="badge badge-neutral badge-outline px-2 py-1 text-xs font-medium capitalize">
+                        {post.post_status}
+                      </span>
+                    </div>
+                    <div class="mt-4">
+                      <a
+                        class="btn btn-square btn-primary btn-block capitalize"
+                        href={`/post/${post.slug}`}
+                      >
+                        Ver publicación
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div>No posts available.</div>
+          )
+        }
+      </div>
+    </section>
+  </div>
+</HomeLayout>

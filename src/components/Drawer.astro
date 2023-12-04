@@ -182,19 +182,21 @@ let activePath = Astro.url.pathname;
           <div class="divider" />
           <div class="h-full">
             <li>
-              <div class="avatar placeholder">
-                <div class="flex h-10 w-10 items-center justify-center rounded-full  bg-primary text-white">
-                  <span class="text-sm">{profile.initials}</span>
-                </div>
-                <span>
-                  <div class="flex flex-col">
-                    <p class="capitalize text-current brightness-200">
-                      {profile.full_name}
-                    </p>
-                    <p class="capitalize text-neutral">@{profile.username}</p>
+              <a href={`/user/${profile.username}`}>
+                <div class="avatar placeholder">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full  bg-primary text-white">
+                    <span class="text-sm">{profile.initials}</span>
                   </div>
-                </span>
-              </div>
+                  <span>
+                    <div class="flex flex-col">
+                      <p class="capitalize text-current brightness-200">
+                        {profile.full_name}
+                      </p>
+                      <p class="capitalize text-neutral">@{profile.username}</p>
+                    </div>
+                  </span>
+                </div>
+              </a>
             </li>
           </div>
         </ul>

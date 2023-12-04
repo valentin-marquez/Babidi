@@ -166,6 +166,18 @@ export async function uploadImage(
   return { url: publicURL, file_id: data.path };
 }
 
+export async function uploadAvatar(
+  image: File,
+  user_id: string,
+): Promise<{ url: string; file_id: string }> {
+  const file_id = uuidv4();
+  const storage = supabase.storage.from("avatars");
+  const { data, error } = await storage.upload(`${user_id}/${file_id}`, image);
+  if (error) throw error;
+  const publicURL = storage.getPublicUrl(`${data.path}`).data.publicUrl;
+  return { url: publicURL, file_id: file_id };
+}
+
 export async function isLoggedIn(sbat: string): Promise<boolean> {
   const {
     data: { user },
@@ -173,5 +185,24 @@ export async function isLoggedIn(sbat: string): Promise<boolean> {
 
   if (!user || user.role !== "authenticated") return false;
 
+  return true;
+}
+
+export async function isSameUser(
+  sbat: string,
+  user_id: string,
+): Promise<boolean> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser(sbat);
+  if (!user || user.id !== user_id) return false;
+  return true;
+}
+
+export async function deleteAvatar(user_id: string): Promise<boolean> {
+  const { error } = await supabase.storage
+    .from("avatars")
+    .remove([`${user_id}`]);
+  if (error) throw error;
   return true;
 }

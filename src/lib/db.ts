@@ -1,5 +1,5 @@
 import { prisma } from "@lib/prisma-client";
-import { Prisma, status_type } from "@prisma/client";
+import { status_type } from "@prisma/client";
 import { supabase } from "@lib/supabase-client";
 import type { UserLocation } from "@lib/interfaces";
 
@@ -169,8 +169,7 @@ interface Post {
   busca_descripcion: string | null;
   updated_at: Date;
   slug: string;
-  image_urls: string[];
-  profile_picture: string | null;
+  image_urls: string | string[];
   full_name: string;
   username: string;
   category_name: string;
@@ -179,13 +178,15 @@ interface Post {
 
 export const getPostBySlug = async (slug: string): Promise<Post | null> => {
   try {
-    const posts = await prisma.$queryRaw`
+    const posts: Post[] = await prisma.$queryRaw`
       SELECT * FROM post_details WHERE slug = ${slug}
     `;
     if (posts && posts.length > 0) {
-      const post = posts[0];
-      post.image_urls = post.image_urls.split(",");
-      return post as Post;
+      const currentPost = posts[0];
+      if (typeof currentPost.image_urls === "string") {
+        currentPost.image_urls = currentPost.image_urls.split(",");
+      }
+      return currentPost;
     }
     return null;
   } catch (error) {
@@ -193,5 +194,81 @@ export const getPostBySlug = async (slug: string): Promise<Post | null> => {
     return null;
   } finally {
     await prisma.$disconnect();
+  }
+};
+
+interface UserProfile {
+  user_id: string;
+  full_name: string;
+  username: string;
+  avatar: string | null;
+  bio: string | null;
+  profile_status: string;
+  avatar_id: string | null;
+}
+
+export const getUserProfile = async (
+  username: string,
+): Promise<UserProfile | null> => {
+  try {
+    const userProfile =
+      await prisma.$queryRaw`SELECT * FROM GetUserProfile(${username})`;
+    return userProfile[0];
+  } catch (error) {
+    console.error("Error getting user profile:", error);
+    return null;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+interface UserPost {
+  title: string;
+  post_status: string;
+  slug: string;
+  post_id: number;
+  image_urls: string;
+}
+export const getUserProfilePosts = async (
+  username: string,
+): Promise<UserPost[] | null> => {
+  try {
+    const userPosts =
+      await prisma.$queryRaw`SELECT * FROM GetUserProfilePosts(${username})`;
+    return userPosts as UserPost[];
+  } catch (error) {
+    console.error("Error getting user posts:", error);
+    return null;
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+export const updateProfile = async (profileData: {
+  user_id: string;
+  full_name: string;
+  username: string;
+  bio: string;
+  avatar: string;
+  avatar_id: string;
+}): Promise<boolean> => {
+  try {
+    const profile = await prisma.profiles.update({
+      where: {
+        user_id: profileData.user_id,
+      },
+      data: {
+        full_name: profileData.full_name,
+        username: profileData.username,
+        bio: profileData.bio,
+        avatar: profileData.avatar,
+        avatar_id: profileData.avatar_id,
+      },
+    });
+
+    return !!profile;
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    throw error;
   }
 };

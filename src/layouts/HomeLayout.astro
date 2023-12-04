@@ -41,5 +41,25 @@ import "src/global.css";
         favicon.setAttribute("href", "/favicon/favicon-off.svg");
       };
     </script>
+
+    <script>
+      let lastCookies = document.cookie;
+
+      function getCookies() {
+        return document.cookie;
+      }
+
+      function compareCookies(oldCookies, newCookies) {
+        return oldCookies !== newCookies;
+      }
+
+      setInterval(() => {
+        const currentCookies = getCookies();
+        if (compareCookies(lastCookies, currentCookies)) {
+          location.reload();
+        }
+        lastCookies = currentCookies;
+      }, 1000);
+    </script>
   </body>
 </html>

@@ -11,7 +11,6 @@ import { useDropzone } from "react-dropzone";
 import Cookies from "js-cookie";
 import { DoubleSpinner, CompletionAnimation } from "@components/Utils";
 
-// @ts-ignore
 interface UploadButtonProps {
   onClick: () => void;
 }
@@ -49,9 +48,6 @@ const ImageModal: React.FC<ImageModalProps> = ({
   onNextButton,
   handleBack,
   step,
-  setSelectedImages,
-  setSelectedImageIndex,
-  selectedImages,
   style,
   isCompleted,
   isLoading,
@@ -164,8 +160,6 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
   image,
   onPrev,
   onNext,
-  className,
-  children,
   onAdd,
   style,
   selectedImageIndex,
@@ -542,7 +536,7 @@ const PostButton: React.FC<PostButtonProps> = ({
     resetModal();
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data) => {
     setIsLoading(true);
     const sbat = Cookies.get("sbat");
 

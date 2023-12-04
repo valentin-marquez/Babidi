@@ -343,12 +343,12 @@ model posts {
   profiles          profiles?         @relation(fields: [author_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
   ratings_reviews   ratings_reviews[]
 
+  @@index([slug], map: "idx_posts_slug")
   @@schema("public")
 }
 
 model profiles {
   user_id                                                 String            @id @db.Uuid
-  profile_picture                                         String?           @db.VarChar(255)
   full_name                                               String?           @db.VarChar(100)
   username                                                String?           @db.VarChar(50)
   accepted_terms                                          Boolean?
@@ -359,6 +359,7 @@ model profiles {
   avatar                                                  String?           @db.VarChar(255)
   bio                                                     String?
   status                                                  String?           @db.VarChar(255)
+  avatar_id                                               String?           @db.Uuid
   messages_messages_receiver_idToprofiles                 messages[]        @relation("messages_receiver_idToprofiles")
   messages_messages_sender_idToprofiles                   messages[]        @relation("messages_sender_idToprofiles")
   posts                                                   posts[]
@@ -370,6 +371,7 @@ model profiles {
   user_blocks_user_blocks_blocking_user_idToprofiles      user_blocks[]     @relation("user_blocks_blocking_user_idToprofiles")
   user_locations                                          user_locations?
 
+  @@index([username], map: "idx_users_username")
   @@schema("public")
 }
 
