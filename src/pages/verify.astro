@@ -71,7 +71,15 @@ import MainLayout from "@layouts/MainLayout.astro";
 
             const data = await res.json();
             if (!data.status) {
-              window.location.href = "/home";
+              // get param redirect
+              const urlParams = new URLSearchParams(window.location.search);
+              const redirect = urlParams.get("redirect");
+              console.log(redirect);
+              if (redirect) {
+                window.location.href = redirect;
+              } else {
+                window.location.href = "/home";
+              }
             } else {
               window.location.href = "/onboarding";
             }

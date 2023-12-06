@@ -53,13 +53,28 @@ export async function signInWithEmail(email: string, password: string) {
   return { auth: data, error: error };
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(redirectUrl?: string) {
+  let redirectTo;
+  console.log(redirectUrl);
+  if (redirectUrl) {
+    redirectTo =
+      (import.meta.env.DEV
+        ? "http://localhost:4321/verify"
+        : "https://babidi.vercel.app/verify") +
+      "?redirect=" +
+      redirectUrl;
+    console.log(redirectTo);
+  } else {
+    redirectTo = import.meta.env.DEV
+      ? "http://localhost:4321/verify"
+      : "https://babidi.vercel.app/verify";
+  }
+  console.log(redirectTo);
+
   return await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: import.meta.env.DEV
-        ? "http://localhost:4321/verify"
-        : "https://babidi.vercel.app/verify",
+      redirectTo: redirectTo,
     },
   });
 }
@@ -199,10 +214,10 @@ export async function isSameUser(
   return true;
 }
 
-export async function deleteAvatar(user_id: string): Promise<boolean> {
+export async function deleteAvatar(file_path: string): Promise<boolean> {
   const { error } = await supabase.storage
     .from("avatars")
-    .remove([`${user_id}`]);
+    .remove([`${file_path}`]);
   if (error) throw error;
   return true;
 }

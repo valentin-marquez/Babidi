@@ -17,6 +17,9 @@ function LoginForm() {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirect = urlParams.get("redirect");
+
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -81,7 +84,16 @@ function LoginForm() {
         if (data.isOnboarding) {
           window.location.href = "/onboarding";
         } else {
-          window.location.href = "/home";
+          try {
+            if (redirect) {
+              window.location.href = redirect;
+            } else {
+              window.location.href = "/home";
+            }
+          } catch (error) {
+            console.log(error);
+            window.location.href = "/home";
+          }
         }
       } else if (error) {
         setLoadingLogin(false);
@@ -101,7 +113,13 @@ function LoginForm() {
 
   const handleGoogleSubmit = async () => {
     setLoadingGoogle(true);
-    await signInWithGoogle();
+
+    console.log("redirect", redirect);
+    if (typeof redirect === "string" && redirect.length > 0) {
+      signInWithGoogle(encodeURIComponent(redirect));
+    } else {
+      signInWithGoogle();
+    }
   };
 
   return (

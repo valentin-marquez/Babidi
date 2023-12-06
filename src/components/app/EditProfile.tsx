@@ -2,34 +2,22 @@ import React, { useState, useEffect } from "react";
 import { User, Plus } from "lucide-react";
 import { SpinnerAnimation } from "@components/Utils";
 
-interface IEditProfileProps {
-  user: any;
-  action: string;
-  method: string;
-  cookie: string;
-}
-
-interface UserProfile {
-  user_id: string;
-  full_name: string;
-  username: string;
-  bio: string;
-  avatar: string;
-}
-
 export default function EditProfile({
   user: UserProfile,
   action,
   method,
   cookie,
 }) {
-  const [user, setUser] = useState({
+  const initialUserState = {
     id: UserProfile.user_id,
     fullName: UserProfile.full_name,
     username: UserProfile.username,
     bio: UserProfile.bio,
     avatar: UserProfile.avatar,
-  });
+    file_id: UserProfile.avatar_id,
+  };
+
+  const [user, setUser] = useState(initialUserState);
   const [isLoading, setIsLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
@@ -48,10 +36,19 @@ export default function EditProfile({
     fileInputRef.current.click();
   };
   useEffect(() => {
+    if (JSON.stringify(user) === JSON.stringify(initialUserState)) {
+      setIsClicked(true);
+      setToastMessage("No hay cambios para actualizar");
+    } else {
+      setIsClicked(false);
+      setToastMessage("");
+    }
+  }, [user]);
+  useEffect(() => {
     if (toastMessage) {
       const timer = setTimeout(() => {
         setToastMessage("");
-      }, 1000); // 1000ms = 1s
+      }, 0); // 0ms = 0s
 
       // Cleanup function to clear the timer if the component unmounts
       return () => clearTimeout(timer);
@@ -109,8 +106,7 @@ export default function EditProfile({
   };
 
   return (
-    <div className="mx-auto  rounded-lg font-sora lg:flex lg:flex-col lg:items-center">
-      {isLoading && <SpinnerAnimation />}
+    <div className="mx-auto rounded-lg font-sora lg:flex lg:flex-col lg:items-center">
       {toastMessage && (
         <div className="toast absolute">
           <div
@@ -207,7 +203,7 @@ export default function EditProfile({
                 }`}
                 disabled={isClicked}
               >
-                Save
+                {isLoading ? <SpinnerAnimation /> : "Actualizar"}
               </button>
             </div>
           </form>

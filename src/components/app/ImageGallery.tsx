@@ -65,11 +65,11 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
         <button
           onClick={handlePreviousClick}
           disabled={startSlice === 0}
-          className={`btn btn-circle btn-primary flex items-center justify-center ${
+          className={`btn btn-circle btn-primary flex items-center justify-center sm:btn-sm md:btn-md ${
             startSlice === 0 ? "btn-disabled cursor-not-allowed opacity-50" : ""
           }`}
         >
-          <ChevronLeftCircle className="h-8 w-8" />
+          <ChevronLeftCircle />
         </button>
         <div className="flex space-x-4 overflow-hidden">
           {imageUrls.slice(startSlice, startSlice + 3).map((url, index) => (
@@ -90,13 +90,13 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ imageUrls }) => {
         <button
           onClick={handleNextClick}
           disabled={startSlice >= imageUrls.length - 3}
-          className={`btn btn-circle btn-primary flex items-center justify-center ${
+          className={`btn btn-circle btn-primary  flex items-center justify-center sm:btn-sm md:btn-md ${
             startSlice >= imageUrls.length - 3
               ? "btn-disabled cursor-not-allowed opacity-50"
               : ""
           }`}
         >
-          <ChevronRightCircle className="h-8 w-8" />
+          <ChevronRightCircle />
         </button>
       </div>
       <LightBox

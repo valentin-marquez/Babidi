@@ -1,33 +1,19 @@
 ---
-import { getCategories } from "@lib/db";
 import { Search } from "lucide-astro";
-const categories = await getCategories();
 ---
 
 <form method="get" action="/search" class="form-control relative flex w-full">
   <div class="join bg-base-100">
-    <select
-      class="select join-item w-40 justify-center overflow-hidden overflow-ellipsis bg-base-100 font-sora text-xs uppercase leading-10"
-    >
-      <option disabled selected>Filtro</option>
-      {
-        categories &&
-          categories.map((category) => (
-            <option value={category.id}>{category.name}</option>
-          ))
-      }
-    </select>
-    <div>
-      <div>
-        <input
-          class="input join-item input-ghost bg-base-100 font-sora text-sm"
-          placeholder="Buscar Articulo"
-        />
-      </div>
-    </div>
+    <input
+      name="query"
+      class="input join-item input-ghost input-secondary w-[350px] transform-gpu border-x-0 bg-base-100 font-sora text-sm transition-all focus:input-primary"
+      placeholder="Buscar Articulo"
+      autocomplete="off"
+      required
+    />
     <div class="bg-base-100">
       <button
-        class="btn btn-ghost join-item border-transparent transition duration-300 ease-in-out hover:btn-primary hover:border-primary"
+        class="btn btn-ghost join-item transform-gpu border-x-0 border-secondary transition-all hover:bg-primary hover:text-base-content hover:ring-2 hover:ring-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-base-100"
         type="submit"
       >
         <Search class="w-4" />

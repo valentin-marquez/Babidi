@@ -51,6 +51,7 @@ export function Logo() {
         className="h-auto w-24 sm:h-auto sm:w-48"
         decoding="async"
       />
+      <span className="sr-only">Babidi Logo</span>
     </a>
   );
 }

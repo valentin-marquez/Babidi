@@ -1,0 +1,167 @@
+---
+import SearchApp from "@app/SearchApp";
+
+import HomeLayout from "@layouts/HomeLayout.astro";
+import { getCategories, getStatusTypes, searchArticles } from "@lib/db";
+
+const category = Astro.url.searchParams.get("category") || "all";
+const query = Astro.url.searchParams.get("query") || "";
+
+let initialArticles = [];
+let TotalArticles = 0;
+const articles = await searchArticles(query, category).then(async (result) => {
+  initialArticles = result.articles;
+  TotalArticles = result.totalArticles;
+});
+const categories = await getCategories();
+const status = await getStatusTypes();
+---
+
+<HomeLayout>
+  {
+    query ? (
+      <SearchApp
+        initialQuery={query}
+        initialCategory={category}
+        initialCategories={categories}
+        initialArticles={initialArticles}
+        initialTotalArticles={TotalArticles}
+        status={status}
+        client:load
+      />
+    ) : (
+      <div class="container mx-auto mt-4 px-4">
+        <p>No se encontraron resultados para su búsqueda.</p>
+      </div>
+    )
+  }
+  <!-- <div class="container mx-auto mt-4 px-4">
+    <div class="flex flex-col gap-4 lg:flex-row">
+      <div class="w-full lg:w-1/4">
+        <h2
+          class="font-syne text-3xl font-semibold uppercase leading-[48px] brightness-150"
+        >
+          Resultados
+        </h2>
+        <div
+          class="collapse collapse-arrow mt-4 w-full grow-0 rounded-3xl border border-base-300 bg-base-200 shadow-sm md:collapse-open"
+        >
+          <input type="checkbox" class="peer" />
+          <h2
+            class="collapse-title flex flex-row items-center justify-center font-syne text-xl brightness-150"
+          >
+            Filtros
+          </h2>
+          <div class="collapse-content">
+            <div class="mb-4">
+              <div class="mt-2 flex flex-col space-y-2">
+                <button class="btn btn-sm">Categoria: Todas</button>
+                <button class="btn btn-sm">Estado: Todos</button>
+                <button class="btn btn-primary btn-sm">Limpiar todo</button>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-control w-full">
+                <div class="label">
+                  <span class="label-text font-sora font-semibold"
+                    >Categorías</span
+                  >
+                </div>
+                <select
+                  name=""
+                  id=""
+                  class="select select-bordered transition-colors hover:select-primary"
+                >
+                  <option disabled selected>Todas</option>
+                  <option>Han Solo</option>
+                  <option>Greedo</option>
+                </select>
+              </label>
+            </div>
+            <div class="mb-4">
+              <label class="form-control">
+                <div class="label">
+                  <span class="label-text font-sora font-semibold">Estado</span>
+                </div>
+                <select
+                  name=""
+                  id=""
+                  class="select select-bordered transition-colors hover:select-primary"
+                >
+                  <option disabled selected>Todas</option>
+                  <option>Han Solo</option>
+                  <option>Greedo</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-full lg:w-3/4">
+        <div
+          class="mb-4 flex flex-col items-center justify-between lg:flex-row lg:items-end lg:justify-end"
+        >
+          <div class="flex w-full flex-row items-center justify-end lg:w-auto">
+            <input
+              class="input join-item input-bordered input-secondary w-full focus:input-primary lg:w-auto"
+              placeholder="Buscar en resultados"
+            />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3">
+          {
+            posts.length > 0 &&
+              posts.map((post) => (
+                <Card
+                  post={{
+                    title: post.title,
+                    post_status: post.status.replace("_", " "),
+                    slug: post.slug,
+                    post_id: post.post_id,
+                    image_urls: post.image_urls,
+                  }}
+                />
+              ))
+          }
+        </div>
+        <div class="flex w-full flex-row items-center justify-center">
+          <div class="join mt-4">
+            <button
+              class="btn join-item"
+              disabled={page === 1 || totalPages === 1}
+              onClick={() => setPage(page - 1)}
+            >
+              <ChevronsLeft />
+            </button>
+
+            {
+              totalPages === 1 ? (
+                <button class="btn btn-primary join-item">{page}</button>
+              ) : (
+                Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (pageNumber) => (
+                    <button
+                      class={`btn join-item ${
+                        pageNumber === page ? "btn-primary" : ""
+                      }`}
+                      onClick={() => setPage(pageNumber)}
+                    >
+                      {pageNumber}
+                    </button>
+                  ),
+                )
+              )
+            }
+            <button
+              class="btn join-item"
+              disabled={page === totalPages || totalPages === 1}
+              onClick={() => setPage(page + 1)}
+            >
+              <ChevronsRight />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</HomeLayout>

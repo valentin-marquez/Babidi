@@ -16,21 +16,25 @@ const initials = post.full_name
   .map((word) => word[0])
   .join("")
   .toLocaleLowerCase();
+console;
 ---
 
 <HomeLayout>
   <div
     class="mx-auto max-w-4xl rounded-2xl bg-base-200 px-4 font-sora sm:px-6 lg:px-8"
   >
-    <div class="mt-4 rounded-lg p-6 font-sora shadow-md">
+    <div class="rounded-lg font-sora md:mt-4 md:p-6 md:shadow-md">
       <div class="flex flex-col sm:flex-row">
         <div class="space-y-2 sm:w-1/2">
-          <div class="breadcrumbs flex font-sora text-sm sm:hidden">
+          <div class="breadcrumbs flex max-w-xs font-sora text-sm sm:hidden">
             <ul>
               <li>Inicio</li>
               <li>Categorias</li>
               <li>
-                <a class="link" href={`/categorias/${post.category_slug}`}>
+                <a
+                  class="link link-primary"
+                  href={`/categorias/${post.category_slug}`}
+                >
                   {post.category_name}
                 </a>
               </li>
@@ -42,7 +46,7 @@ const initials = post.full_name
             )
           }
         </div>
-        <div class="flex flex-col justify-between space-y-4 sm:w-1/2 sm:pl-6">
+        <div class="flex flex-col space-y-4 sm:w-1/2 sm:pl-6">
           <div>
             <div class="breadcrumbs hidden font-sora text-sm sm:flex">
               <ul>
@@ -58,23 +62,33 @@ const initials = post.full_name
             <h1 class="mb-4 font-syne text-3xl font-bold brightness-200">
               {post.title}
             </h1>
+            <div class="divider"></div>
             <Description text={post.description} client:load />
           </div>
           <div class="flex flex-col gap-3 font-sora">
             <div class="flex w-full flex-row items-center gap-4">
               <a
                 href={`/user/${post.username.toLocaleLowerCase()}`}
-                class="btn btn-ghost flex flex-row text-start"
+                class="btn btn-ghost btn-block flex flex-row justify-start text-start"
+                data-astro-prefetch="viewport"
               >
                 <div class="avatar placeholder">
                   <div
-                    class="w-10 rounded-full bg-primary text-neutral-content"
+                    class="w-10 rounded-full bg-primary text-neutral-content ring ring-primary ring-offset-2 ring-offset-base-200"
                   >
-                    <span class="text-sm">{initials}</span>
+                    {
+                      post.avatar ? (
+                        <img src={post.avatar} alt={post.full_name} />
+                      ) : (
+                        <span>{initials}</span>
+                      )
+                    }
                   </div>
                 </div>
                 <div class="flex flex-col">
-                  <span class="text-sm font-semibold capitalize text-current">
+                  <span
+                    class="text-sm font-semibold capitalize text-current brightness-150"
+                  >
                     {post.full_name}
                   </span>
                   <span class="text-xs font-semibold lowercase text-neutral">

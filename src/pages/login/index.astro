@@ -1,10 +1,8 @@
 ---
-import MainLayout from "@layouts/MainLayout.astro";
 import LoginForm from "@components/LoginForm.tsx";
-
+import MainLayout from "@layouts/MainLayout.astro";
 ---
 
-
 <MainLayout navBar={false} footer={false}>
-    <LoginForm client:load />
+  <LoginForm client:only />
 </MainLayout>

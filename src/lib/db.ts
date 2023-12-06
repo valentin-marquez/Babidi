@@ -222,7 +222,7 @@ export const getUserProfile = async (
   }
 };
 
-interface UserPost {
+export interface UserPost {
   title: string;
   post_status: string;
   slug: string;
@@ -272,3 +272,57 @@ export const updateProfile = async (profileData: {
     throw error;
   }
 };
+
+export async function searchArticles(
+  query: string,
+  category: string = "all",
+  page: number = 1,
+  pageSize: number = 10,
+) {
+  if (!query) {
+    throw new Error("Query is required");
+  }
+
+  let whereClause = {
+    OR: [
+      {
+        title: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      {
+        description: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+    ],
+  };
+
+  if (category !== "all") {
+    whereClause = {
+      ...whereClause,
+      category_slug: category,
+    };
+  }
+
+  const skip = (page - 1) * pageSize;
+
+  const articles = await prisma.post_details
+    .findMany({
+      where: whereClause,
+      take: pageSize,
+      skip: skip,
+    })
+    .finally(() => {
+      prisma.$disconnect();
+    });
+
+  const totalArticles = await prisma.post_details.count({ where: whereClause });
+
+  return {
+    articles,
+    totalArticles,
+  };
+}

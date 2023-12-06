@@ -29,6 +29,9 @@ if (token) {
 
 const categories = await getCategories();
 const statusTypes = await getStatusTypes();
+
+const currentUrl = Astro.url.href;
+const loginUrl = "/login?redirect=" + encodeURIComponent(currentUrl);
 ---
 
 <div class="navbar z-10 bg-base-200">
@@ -55,7 +58,7 @@ const statusTypes = await getStatusTypes();
       <div class="navbar-end">
         <div class="flex flex-row items-center gap-2 sm:flex-row sm:space-x-4 sm:space-y-0">
           <a
-            href="/login"
+            href={loginUrl}
             class="block items-center text-center font-sora text-sm transition-colors duration-200 hover:text-white sm:flex sm:text-base"
             data-astro-prefetch
           >

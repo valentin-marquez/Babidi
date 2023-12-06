@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema", "postgresqlExtensions"]
+  previewFeatures = ["fullTextIndex", "multiSchema", "postgresqlExtensions", "views"]
   binaryTargets   = ["native"]
 }
 
@@ -325,6 +325,7 @@ model post_images {
   @@schema("public")
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model posts {
   post_id           Int               @id @default(autoincrement())
   title             String            @db.VarChar(255)
@@ -423,6 +424,26 @@ model user_locations {
   @@schema("public")
 }
 
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view post_details {
+  id            BigInt       @id 
+  post_id       Int?
+  title         String?      @db.VarChar(255)
+  description   String?
+  author_id     String?      @db.Uuid
+  created_at    DateTime?    @db.Timestamp(6)
+  status        status_type?
+  updated_at    DateTime?    @db.Timestamp(6)
+  slug          String?      @db.VarChar(255)
+  image_urls    String?
+  full_name     String?      @db.VarChar(100)
+  username      String?      @db.VarChar(50)
+  category_name String?      @db.VarChar(100)
+  category_slug String?      @db.VarChar
+
+  @@schema("public")
+}
+
 enum aal_level {
   aal1
   aal2
@@ -453,9 +474,9 @@ enum factor_type {
 }
 
 enum status_type {
-  nuevo      @map("nuevo")
+  nuevo
   casi_usado @map("casi usado")
-  usado      @map("usado")
+  usado
   muy_usado  @map("muy usado")
 
   @@schema("public")

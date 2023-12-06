@@ -15,7 +15,7 @@ const Description = ({ text }) => {
         data-tip="Ver más información"
       >
         <p
-          className="btn btn-ghost line-clamp-[10] h-full cursor-pointer whitespace-pre-line text-left font-normal text-current"
+          className="line-clamp-[10] h-full cursor-pointer whitespace-pre-line text-left font-normal text-current"
           onClick={toggleModal}
         >
           {text}
