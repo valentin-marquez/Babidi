@@ -73,7 +73,7 @@ let activePath = Astro.url.pathname;
                 }`}
               >
                 <LayoutGrid
-                  class={
+                  className={
                     activePath === "/home"
                       ? ""
                       : "transition-colors group-hover:stroke-primary"
@@ -98,8 +98,7 @@ let activePath = Astro.url.pathname;
                 }`}
               >
                 <Boxes
-                  class="transition-colors group-hover:stroke-primary"
-                  class={
+                  className={
                     activePath === "/explorar"
                       ? ""
                       : "transition-colors group-hover:stroke-primary"
@@ -126,7 +125,7 @@ let activePath = Astro.url.pathname;
                 }`}
               >
                 <Package
-                  class={`${
+                  className={`${
                     activePath === `/u/${profile.username}`
                       ? ""
                       : "transition-colors group-hover:stroke-primary"
@@ -153,7 +152,7 @@ let activePath = Astro.url.pathname;
                 }`}
               >
                 <MessageCircle
-                  class={
+                  className={
                     activePath === "/chats"
                       ? ""
                       : "transition-all group-hover:stroke-primary"
