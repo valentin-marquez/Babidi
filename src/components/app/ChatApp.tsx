@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getMessages, sendMessage, getUserChats, getUserInfo } from "@lib/chat";
 import type { Message, UserInfo } from "@lib/chat";
-import { getUserByUsername } from "@lib/auth";
 import type { ReceiverUser } from "@lib/auth";
-import Cookies from "js-cookie";
-import { Smile, ImagePlus, Info } from "lucide-react";
+import { ImagePlus, Info } from "lucide-react";
 
 
 
@@ -113,17 +111,23 @@ export function MessageList({ fetchMessages, userId, onUserSelect }: MessageList
 
 type MessageInputProps = {
     onMessageSent: (userId: string, selectedUser: ReceiverUser) => void;
+    fetchMessages: (userId: string, selectedUser: ReceiverUser) => void;
     selectedUser: ReceiverUser;
     userId: string;
 };
 
-export function MessageInput({ onMessageSent, selectedUser, userId }: MessageInputProps): React.ReactElement | null {
+export function MessageInput({ onMessageSent, fetchMessages, selectedUser, userId }: MessageInputProps): React.ReactElement | null {
     const [newMessage, setNewMessage] = useState("");
 
     async function handleSendMessage() {
+        if (!newMessage.trim()) {
+            return;
+        }
+
         await sendMessage(newMessage, userId, selectedUser.user_id);
         setNewMessage("");
         onMessageSent(userId, selectedUser);
+        fetchMessages(userId, selectedUser); // Fetch messages after sending a message
     }
 
     return (
@@ -178,7 +182,7 @@ export function ReceiverInfo({ user }: ReceiverInfoProps): React.ReactElement | 
                 </div>
                 <div className="grid gap-0.5 text-xs">
                     <div className="font-medium font-sora">
-                        <span className="truncate">{user.full_name}</span>
+                        <span className="truncate text-accent-content">{user.full_name}</span>
                     </div>
                     <div className="text-gray-400">
                         @{user.username}
@@ -253,7 +257,7 @@ export default function ChatApp({ userId: initialUserId, selectedUser: initialSe
                 <section className="flex flex-col w-full">
                     {selectedUser && <ReceiverInfo user={selectedUser} />}
                     <ChatFeed messages={messages} userId={userId} />
-                    {selectedUser && <MessageInput onMessageSent={fetchMessages} selectedUser={selectedUser} userId={userId} />}
+                    {selectedUser && <MessageInput onMessageSent={fetchMessages} fetchMessages={fetchMessages} selectedUser={selectedUser} userId={userId} />}
                 </section>
             </main>
         </div>

@@ -92,13 +92,17 @@ export async function getUserInfo(userId: string): Promise<UserInfo | null> {
 export async function getUserChats(userId: string): Promise<string[]> {
   const { data: chats, error } = await supabase
     .from("messages")
-    .select("receiver_id")
-    .eq("sender_id", userId);
+    .select("receiver_id, sender_id")
+    .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
 
   if (error) throw error;
 
-  const uniqueReceiverIds = Array.from(
-    new Set(chats?.map((chat) => chat.receiver_id)),
+  const uniqueChatIds = Array.from(
+    new Set(
+      chats?.map((chat) =>
+        chat.receiver_id === userId ? chat.sender_id : chat.receiver_id,
+      ),
+    ),
   );
-  return uniqueReceiverIds || [];
+  return uniqueChatIds || [];
 }
