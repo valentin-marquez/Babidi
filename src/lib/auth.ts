@@ -55,7 +55,6 @@ export async function signInWithEmail(email: string, password: string) {
 
 export async function signInWithGoogle(redirectUrl?: string) {
   let redirectTo;
-  console.log(redirectUrl);
   if (redirectUrl) {
     redirectTo =
       (import.meta.env.DEV
@@ -63,13 +62,11 @@ export async function signInWithGoogle(redirectUrl?: string) {
         : "https://babidi.vercel.app/verify") +
       "?redirect=" +
       redirectUrl;
-    console.log(redirectTo);
   } else {
     redirectTo = import.meta.env.DEV
       ? "http://localhost:4321/verify"
       : "https://babidi.vercel.app/verify";
   }
-  console.log(redirectTo);
 
   return await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -220,4 +217,25 @@ export async function deleteAvatar(file_path: string): Promise<boolean> {
     .remove([`${file_path}`]);
   if (error) throw error;
   return true;
+}
+
+export interface ReceiverUser {
+  user_id: string;
+  full_name: string;
+  username: string;
+  avatar: string;
+  bio: string;
+}
+
+export async function getUserByUsername(
+  username: string,
+): Promise<ReceiverUser | null> {
+  const { data, error }: { data: ReceiverUser } = await supabase
+    .from("profiles")
+    .select("user_id, full_name, username, avatar, bio")
+    .eq("username", username)
+    .single();
+
+  if (error) throw error;
+  return data;
 }

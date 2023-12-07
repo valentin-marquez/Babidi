@@ -16,7 +16,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ post, isSame = false }) => {
   return (
-    <div className="bg-card text-card-foreground w-full rounded-3xl border border-base-300 bg-base-200 shadow-sm">
+    <div className="w-full rounded-3xl border border-base-300 bg-base-200 shadow-sm">
       <div className="p-4">
         <div className="relative rounded-3xl">
           <img

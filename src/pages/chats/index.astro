@@ -1,0 +1,19 @@
+---
+import ChatApp from "@app/ChatApp.tsx";
+import HomeLayout from "@layouts/HomeLayout.astro";
+import { getUser } from "@lib/auth";
+
+if (!Astro.cookies.has("sbat")) {
+  return Astro.redirect(
+    `/login?redirect=${encodeURIComponent(Astro.url.href)}`,
+  );
+}
+
+const user = await getUser(Astro.cookies.get("sbat").value);
+
+//
+---
+
+<HomeLayout>
+  <ChatApp userId={user.id} client:load />
+</HomeLayout>

@@ -50,6 +50,7 @@ interface Profile {
   username: string;
   full_name: string;
   status: string;
+  avatar: string | null;
 }
 
 export async function getProfileInfo(id: string): Promise<Profile> {
@@ -63,6 +64,7 @@ export async function getProfileInfo(id: string): Promise<Profile> {
         username: true,
         full_name: true,
         status: true,
+        avatar: true,
       },
     })
     .finally(() => {
@@ -73,6 +75,7 @@ export async function getProfileInfo(id: string): Promise<Profile> {
     username: profile.username,
     full_name: profile.full_name,
     status: profile.status,
+    avatar: profile.avatar,
   };
 }
 
