@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { getMessages, sendMessage, getUserChats, getUserInfo } from "@lib/chat";
 import type { Message, UserInfo } from "@lib/chat";
 import type { ReceiverUser } from "@lib/auth";
-import { ImagePlus, Info } from "lucide-react";
+import { ImagePlus, Info, ArrowLeft } from "lucide-react";
 import { supabase } from "@lib/supabase-client";
+import { Transition } from "@headlessui/react";
 
 
 
@@ -22,10 +23,9 @@ interface AvatarCardProps {
 export function AvatarCard({ profile }: AvatarCardProps) {
     const initials = profile.full_name.split(' ').map(name => name[0]).join('');
     return (
-        <div className="flex w-full flex-row items-center gap-4">
+        <div className="flex w-full flex-col sm:flex-row items-center sm:gap-4 justify-start">
             <button
-                className="btn btn-ghost btn-block flex flex-row justify-start text-start"
-                data-astro-prefetch="viewport"
+                className="btn btn-ghost btn-block md:btn-wide flex flex-row justify-start text-start bg-base-300"
             >
                 <div className="avatar placeholder">
                     <div
@@ -40,7 +40,7 @@ export function AvatarCard({ profile }: AvatarCardProps) {
                         }
                     </div>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-start">
                     <span
                         className="text-sm font-semibold capitalize text-current brightness-150"
                     >
@@ -59,9 +59,10 @@ type MessageListProps = {
     fetchMessages: (userId: string, selectedUser?: ReceiverUser) => void;
     userId: string;
     onUserSelect: (user: ReceiverUser) => void;
+    className?: string; // Add this line
 };
 
-export function MessageList({ fetchMessages, userId, onUserSelect }: MessageListProps) {
+export function MessageList({ fetchMessages, userId, onUserSelect, className }: MessageListProps) {
     const [userChats, setUserChats] = useState<UserInfo[]>([]);
 
     useEffect(() => {
@@ -83,7 +84,8 @@ export function MessageList({ fetchMessages, userId, onUserSelect }: MessageList
             .on(
                 'postgres_changes',
                 { event: '*', schema: 'public', table: 'messages' },
-                () => {
+                (payload) => {
+                    console.log(payload);
                     fetchChats();
                 }
             )
@@ -95,8 +97,14 @@ export function MessageList({ fetchMessages, userId, onUserSelect }: MessageList
 
     }, [userId]);
 
+    const handleUserSelection = (user: ReceiverUser) => {
+        onUserSelect(user);
+    }
+
+
+
     return (
-        <aside className="w-72 border-r rounded-3xl border border-base-300 bg-base-200 shadow-sm">
+        <aside className={`w-72 border-r rounded-3xl border border-base-300 bg-base-200 shadow-sm ${className}`}>
             <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between h-16 p-4 border-b border-base-300">
                     <h2 className="p-2 rounded-full  text-lg font-semibold font-syne text-accent-content">Chats</h2>
@@ -192,11 +200,16 @@ export function MessageInput({ onMessageSent, fetchMessages, selectedUser, userI
 
 type ReceiverInfoProps = {
     user: ReceiverUser;
+    onBackClick: () => void;
 };
-
-export function ReceiverInfo({ user }: ReceiverInfoProps): React.ReactElement | null {
+export function ReceiverInfo({ user, onBackClick }: ReceiverInfoProps): React.ReactElement | null {
     return (
         <header className="flex items-center justify-between h-16 p-4 border-b  border-base-300">
+            <div className="flex items-center gap-2 md:hidden">
+                <button className="btn btn-circle btn-ghost w-10 h-10 rounded-full" onClick={onBackClick}>
+                    <ArrowLeft />
+                </button>
+            </div>
             <div className="flex items-center gap-3">
                 <div className="avatar placeholder">
                     <div className="bg-primary text-neutral-content rounded-full w-8">
@@ -220,7 +233,7 @@ export function ReceiverInfo({ user }: ReceiverInfoProps): React.ReactElement | 
                     </div>
                 </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="items-center gap-2 flex">
                 <button className="btn btn-circle btn-ghost w-10 h-10 rounded-full">
                     <Info />
                 </button>
@@ -262,6 +275,7 @@ export default function ChatApp({ userId: initialUserId, selectedUser: initialSe
     const [userId, setUserId] = useState(initialUserId);
     const [selectedUser, setSelectedUser] = useState<ReceiverUser>(initialSelectedUser);
     const [messages, setMessages] = useState<Message[]>([]);
+    const [isMessageListVisible, setIsMessageListVisible] = useState(true);
 
     async function fetchMessages(userId: string, selectedUser?: ReceiverUser) {
         const messages = await getMessages(userId, selectedUser?.user_id);
@@ -292,14 +306,27 @@ export default function ChatApp({ userId: initialUserId, selectedUser: initialSe
     }, [userId, selectedUser]);
 
     return (
+
         <div className="!visible transition-opacity duration-150 !opacity-100">
             <main className="flex w-full h-[calc(100vh-68px)] border border-base-300 bg-base-200 shadow-sm">
-                <MessageList fetchMessages={fetchMessages} userId={userId} onUserSelect={handleUserSelect} />
-                <section className="flex flex-col w-full">
-                    {selectedUser && <ReceiverInfo user={selectedUser} />}
-                    <ChatFeed messages={messages} userId={userId} />
-                    {selectedUser && <MessageInput onMessageSent={fetchMessages} fetchMessages={fetchMessages} selectedUser={selectedUser} userId={userId} />}
-                </section>
+                {isMessageListVisible && (
+                    <MessageList
+                        fetchMessages={fetchMessages}
+                        userId={userId}
+                        onUserSelect={(user) => {
+                            handleUserSelect(user);
+                            setIsMessageListVisible(false);
+                        }}
+                        className="w-full sm:w-auto h-full sm:h-auto"
+                    />
+                )}
+                {!isMessageListVisible && (
+                    <section className="flex flex-col w-full">
+                        {selectedUser && <ReceiverInfo user={selectedUser} onBackClick={() => setIsMessageListVisible(true)} />}
+                        <ChatFeed messages={messages} userId={userId} />
+                        {selectedUser && <MessageInput onMessageSent={fetchMessages} fetchMessages={fetchMessages} selectedUser={selectedUser} userId={userId} />}
+                    </section>
+                )}
             </main>
         </div>
     );

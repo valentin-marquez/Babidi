@@ -86,7 +86,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
           >
             <div
               style={style}
-              className="mx-auto flex transform flex-col rounded-lg bg-base-200 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+              className="mx-auto flex transform flex-col rounded-lg bg-base-200 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg w-full h-full"
             >
               <div className="navbar flex w-full items-center justify-between p-2">
                 <div className="navbar-start">
@@ -182,9 +182,8 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
     </button>
     <div className="navigation absolute bottom-0 left-0 right-0 flex justify-between bg-black bg-opacity-50 p-2">
       <button
-        className={`btn-ghosts btn btn-sm transform transition-all duration-300 hover:scale-110 ${
-          selectedImageIndex === 0 ? "btn-disabled" : ""
-        }`}
+        className={`btn-ghosts btn btn-sm transform transition-all duration-300 hover:scale-110 ${selectedImageIndex === 0 ? "btn-disabled" : ""
+          }`}
         onClick={selectedImageIndex === 0 ? undefined : onPrev}
       >
         <ChevronLeft className="inline-block h-5 w-5 stroke-current text-current" />
@@ -193,18 +192,16 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
         {selectedImages.map((_, index) => (
           <span
             key={index}
-            className={`inline-block h-2 w-2 rounded-full bg-current transition-all duration-300   ${
-              selectedImageIndex === index
+            className={`inline-block h-2 w-2 rounded-full bg-current transition-all duration-300   ${selectedImageIndex === index
                 ? "bg-primary bg-opacity-100"
                 : "bg-opacity-50"
-            }`}
+              }`}
           />
         ))}
       </div>
       <button
-        className={`btn-ghosts btn btn-sm transform transition-all duration-300 hover:scale-110 ${
-          selectedImageIndex === selectedImages.length - 1 ? "btn-disabled" : ""
-        }`}
+        className={`btn-ghosts btn btn-sm transform transition-all duration-300 hover:scale-110 ${selectedImageIndex === selectedImages.length - 1 ? "btn-disabled" : ""
+          }`}
         onClick={
           selectedImageIndex === selectedImages.length - 1 ? undefined : onNext
         }
@@ -237,9 +234,8 @@ const UploadArea: React.FC<UploadAreaProps> = ({
   return (
     <div
       {...getRootProps()}
-      className={`flex flex-col items-center justify-center rounded-lg font-sora ${
-        isDragActive ? "bg-base-300" : "hover:bg-base-300"
-      } h-full w-full cursor-pointer transition-all duration-300`}
+      className={`flex flex-col items-center justify-center rounded-lg font-sora ${isDragActive ? "bg-base-300" : "hover:bg-base-300"
+        } h-full w-full cursor-pointer transition-all duration-300`}
       style={{ ...style, flex: 1 }}
     >
       <input {...getInputProps()} />
@@ -402,9 +398,8 @@ const InformationForm: React.FC<InformationFormProps> = ({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ingresa el nombre del objeto"
-            className={`input input-bordered w-full transition-colors focus:input-primary ${
-              titleError ? "input-error" : ""
-            }`}
+            className={`input input-bordered w-full transition-colors focus:input-primary ${titleError ? "input-error" : ""
+              }`}
             onClick={() => setTitleError(false)}
           />
         </div>
@@ -424,9 +419,8 @@ const InformationForm: React.FC<InformationFormProps> = ({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Cuentanos sobre el objeto"
-            className={`textarea textarea-bordered w-full transition-colors focus:textarea-primary ${
-              descriptionError ? "textarea-error" : ""
-            }`}
+            className={`textarea textarea-bordered w-full transition-colors focus:textarea-primary ${descriptionError ? "textarea-error" : ""
+              }`}
             onClick={() => setDescriptionError(false)}
             maxLength={200}
             style={{ resize: "none" }}
@@ -446,9 +440,8 @@ const InformationForm: React.FC<InformationFormProps> = ({
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className={`select select-bordered w-full transition-colors focus:select-primary ${
-                categoryError ? "select-error" : ""
-              }`}
+              className={`select select-bordered w-full transition-colors focus:select-primary ${categoryError ? "select-error" : ""
+                }`}
               onClick={() => setCategoryError(false)}
             >
               <option disabled>Seleccione</option>
@@ -478,9 +471,8 @@ const InformationForm: React.FC<InformationFormProps> = ({
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className={`select select-bordered w-full transition-colors focus:select-primary ${
-                statusError ? "select-error" : ""
-              }`}
+              className={`select select-bordered w-full transition-colors focus:select-primary ${statusError ? "select-error" : ""
+                }`}
               onClick={() => setStatusError(false)}
             >
               <option disabled>Seleccione</option>
