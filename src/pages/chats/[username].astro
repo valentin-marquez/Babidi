@@ -14,6 +14,10 @@ const user = await getUser(Astro.cookies.get("sbat").value);
 const { username } = Astro.params;
 
 const userProfile = await getUserByUsername(username);
+
+if (user.id === userProfile.user_id) {
+  return Astro.redirect(`/chats`);
+}
 ---
 
 <HomeLayout>

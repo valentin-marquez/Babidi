@@ -3,6 +3,7 @@ import { getMessages, sendMessage, getUserChats, getUserInfo } from "@lib/chat";
 import type { Message, UserInfo } from "@lib/chat";
 import type { ReceiverUser } from "@lib/auth";
 import { ImagePlus, Info } from "lucide-react";
+import { supabase } from "@lib/supabase-client";
 
 
 
@@ -53,6 +54,7 @@ export function AvatarCard({ profile }: AvatarCardProps) {
         </div>
     );
 }
+
 type MessageListProps = {
     fetchMessages: (userId: string, selectedUser?: ReceiverUser) => void;
     userId: string;
@@ -63,7 +65,7 @@ export function MessageList({ fetchMessages, userId, onUserSelect }: MessageList
     const [userChats, setUserChats] = useState<UserInfo[]>([]);
 
     useEffect(() => {
-        async function fetchChats() {
+        const fetchChats = async () => {
             const chatUserIds = await getUserChats(userId);
             const chats = [];
             for (let i = 0; i < chatUserIds.length; i++) {
@@ -75,12 +77,23 @@ export function MessageList({ fetchMessages, userId, onUserSelect }: MessageList
         }
 
         fetchChats();
-    }, [userId]);
 
-    const handleUserSelection = (user: UserInfo) => {
-        onUserSelect(user);
-        fetchMessages(userId, user);
-    };
+        const subcriptionToChats = supabase
+            .channel("chats")
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'messages' },
+                () => {
+                    fetchChats();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            subcriptionToChats?.unsubscribe();
+        }
+
+    }, [userId]);
 
     return (
         <aside className="w-72 border-r rounded-3xl border border-base-300 bg-base-200 shadow-sm">
@@ -129,6 +142,24 @@ export function MessageInput({ onMessageSent, fetchMessages, selectedUser, userI
         onMessageSent(userId, selectedUser);
         fetchMessages(userId, selectedUser); // Fetch messages after sending a message
     }
+
+    useEffect(() => {
+
+        const subcriptionToFeed = supabase
+            .channel("chatFeed")
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'messages' },
+                async () => {
+                    await handleSendMessage();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            subcriptionToFeed?.unsubscribe();
+        }
+    }, [userId, selectedUser]);
 
     return (
         <div className="flex items-center h-20 p-4 space-x-4 ">
@@ -241,14 +272,24 @@ export default function ChatApp({ userId: initialUserId, selectedUser: initialSe
         setSelectedUser(user);
     }
 
-    useEffect(() => {
-        console.log("Fetching messages for userId:", userId, "and selectedUser:", selectedUser); // Log userId and selectedUser
-        if (selectedUser) {
-            fetchMessages(userId, selectedUser.user_id);
-        }
-    }, [userId, selectedUser]);
 
-    console.log("Rendered with userId:", userId, "selectedUser:", selectedUser); // Log variables on render
+    useEffect(() => {
+        const subscriptionToFeed = supabase
+            .channel("chatFeed")
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'messages' },
+                async (payload) => {
+                    console.log(payload);
+                    fetchMessages(userId, selectedUser);
+                }
+            )
+            .subscribe();
+
+        return () => {
+            subscriptionToFeed.unsubscribe();
+        };
+    }, [userId, selectedUser]);
 
     return (
         <div className="!visible transition-opacity duration-150 !opacity-100">
